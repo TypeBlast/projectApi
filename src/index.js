@@ -17,7 +17,7 @@ class AppController {
 
     router()
     {
-        const routes = require('./router/router');
+        const routes = require('./router/routes');
         this.express.use('/petexpress/', routes);
     }
 
