@@ -1,24 +1,23 @@
-const express = require('express')
-const dotenv = require('dotenv')
+const express = require('express');
+const dotenv = require('dotenv');
 dotenv.config();
 
-const configDatabase = require('./database/index')
+const configDatabase = require('./database/index');
 
 class AppController {
     constructor()
     {
-        this.express = express()
-        this.middlewares()
-        this.router()
+        this.express = express();
+        this.middlewares();
+        this.router();
     }
     middlewares(){
-        this.express.use(express.json())
+        this.express.use(express.json());
     }
 
     router()
     {
-        const routes = require('./router/routes');
-        this.express.use('/petexpress/', routes);
+        this.express.use('/petshopApi', require('./appModule'));
     }
 
 }
@@ -29,4 +28,4 @@ function createApiController(){
 
 const app = createApiController().express;
 
-module.exports = app
+module.exports = app;
