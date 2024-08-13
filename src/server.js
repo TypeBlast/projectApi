@@ -1,5 +1,7 @@
-const minhaApi = require('./index')
+require('dotenv').config();
+const app = require('./index');
+const PORT = process.env.PORT;
 
-minhaApi.listen(5000, () => {
-    console.log('Servidor conectado na porta 5000.');
-})
+app.listen(PORT, () => {
+    console.log(`Servidor conectado e rodando na porta ${PORT} 💾`);
+});
