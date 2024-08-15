@@ -1,6 +1,4 @@
-
 const jwt = require('jsonwebtoken');
-
 
 const JwtSecret = process.env.JWT_SECRET 
 

@@ -9,6 +9,32 @@ async function createUser(userData) {
     }
 }
 
+async function getAllUsers() {
+    try{
+
+        const users = await User.findAll()
+        return { status: 201, data: users };
+    }
+    
+    catch (e) {
+
+    return { status: 400, message: e.message };
+ }
+
+}
+
+async function getUserById(idUser) {
+    try{
+
+        const user = await User.findByPk(idUser)
+        return { status: 201, data: user };
+    }
+    catch (e) {
+
+        return { status: 400, message: e.message };
+     }
+}
+
 module.exports = {
-    createUser
+    createUser, getAllUsers, getUserById
 };
