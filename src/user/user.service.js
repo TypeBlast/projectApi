@@ -35,6 +35,25 @@ async function getUserById(idUser) {
      }
 }
 
+async function deleteUserById(idUser) {
+    try {
+
+        const user = await User.findByPk(idUser);
+
+        if (!user) 
+        {
+            return { status: 404, message: "Usuário não encontrado" };
+        }
+
+        await user.destroy(); 
+        
+        return { status: 200, message: "Usuário excluído com sucesso" };
+
+    } catch (e) {
+        return { status: 400, message: e.message };
+    }
+}
+
 module.exports = {
-    createUser, getAllUsers, getUserById
+    createUser, getAllUsers, getUserById, deleteUserById
 };
