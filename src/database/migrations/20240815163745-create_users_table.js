@@ -33,20 +33,9 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      created_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW
-      },
-      updated_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW
-      }
     },
     {
-      tableName: 'users', // Define explicitamente o nome da tabela como 'usuarios'
-      timestamps: false // Evita que sejam criados os campos createdAt e updatedAt 
+      tableName: 'users', // Define explicitamente o nome da tabela como 'users'
 
     });
   },
