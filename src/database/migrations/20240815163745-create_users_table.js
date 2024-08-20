@@ -33,10 +33,14 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      role: {
+        type: Sequelize.ENUM('admin', 'user'),
+        allowNull: false,
+        defaultValue: 'user'
+      }
     },
     {
       tableName: 'users', // Define explicitamente o nome da tabela como 'users'
-
     });
   },
 

@@ -28,24 +28,23 @@ class User extends Sequelize.Model {
         type: Sequelize.STRING(255),
         allowNull: false,
         validate: {
-            len: [8, 255], 
-            containsAtLeastOneNumber(value) {
-              if (!/\d/.test(value)) { 
-                throw new Error('A senha deve conter pelo menos um número.');
-              }
-            },
-            containsAtLeastOneUpperCaseLetter(value) {
-              if (!/[A-Z]/.test(value)) { 
-                throw new Error('A senha deve conter pelo menos uma letra maiúscula.');
-              }
-            },
-            containsAtLeastOneLowerCaseLetter(value) {
-              if (!/[a-z]/.test(value)) { 
-                throw new Error('A senha deve conter pelo menos uma letra minúscula.');
-              }
+          len: [8, 255],
+          containsAtLeastOneNumber(value) {
+            if (!/\d/.test(value)) {
+              throw new Error('A senha deve conter pelo menos um número.');
+            }
+          },
+          containsAtLeastOneUpperCaseLetter(value) {
+            if (!/[A-Z]/.test(value)) {
+              throw new Error('A senha deve conter pelo menos uma letra maiúscula.');
+            }
+          },
+          containsAtLeastOneLowerCaseLetter(value) {
+            if (!/[a-z]/.test(value)) {
+              throw new Error('A senha deve conter pelo menos uma letra minúscula.');
             }
           }
-        
+        }
       },
       phone: {
         type: Sequelize.STRING(20),
@@ -53,14 +52,18 @@ class User extends Sequelize.Model {
         unique: true
       },
       cpf: {
-        type: Sequelize.STRING(11), 
+        type: Sequelize.STRING(11),
         allowNull: false,
         unique: true,
         validate: {
           is: /^\d{11}$/
         }
       },
-      
+      role: {
+        type: Sequelize.ENUM('admin', 'user'),
+        allowNull: false,
+        defaultValue: 'user'
+      }
     }, {
       sequelize,
       timestamps: false,
@@ -70,7 +73,7 @@ class User extends Sequelize.Model {
           user.password = bcrypt.hashSync(user.password, salt);
         },
         beforeUpdate: async (user) => {
-          if (user.changed('password')) { 
+          if (user.changed('password')) {
             const salt = bcrypt.genSaltSync();
             user.password = await bcrypt.hash(user.password, salt);
           }
