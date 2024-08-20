@@ -3,7 +3,13 @@ const User = require('./Entities/user.entity');
 async function createUser(userData) {
     try {
         const newUser = await User.create(userData);
-        return { status: 201, message: "Usuário criado com sucesso", data: newUser };
+
+        const userJson = newUser.toJSON();
+
+        delete userJson.password;
+
+    
+        return { status: 201, message: "Usuário criado com sucesso", data: userJson };
     } catch (e) {
         return { status: 400, message: e.message };
     }
@@ -24,25 +30,35 @@ async function getAllUsers() {
 }
 
 async function getUserById(idUser) {
-    try{
+    try {
+        if (!idUser || isNaN(idUser)) {
+            throw new Error('Id de usuário inválido.');
+        }
 
-        const user = await User.findByPk(idUser)
-        return { status: 201, data: user };
-    }
-    catch (e) {
+        const user = await User.findByPk(idUser);
 
+        if (!user) {
+            throw new Error('Usuário não encontrado.');
+        }
+
+        return { status: 200, data: user }; 
+    } catch (e) {
         return { status: 400, message: e.message };
-     }
+    }
 }
 
 async function deleteUserById(idUser) {
     try {
 
+        if (!idUser || isNaN(idUser)) {
+            throw new Error('Id de usuário inválido.');
+        }
+        
         const user = await User.findByPk(idUser);
 
         if (!user) 
         {
-            return { status: 404, message: "Usuário não encontrado" };
+            throw new Error('Usuário não encontrado.');
         }
 
         await user.destroy(); 

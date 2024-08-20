@@ -1,19 +1,27 @@
-const authService = require('./auth.service')
+// controllers/auth.controller.js
+const authService = require('./auth.service'); 
 
 const login = async (req, res) => {
-
     try {
+        const { email, password } = req.body;
 
-      const { email, password } = req.body;
+     
+        const result = await authService.login(email, password);
 
-      const { user, token } = await authService.login(email, password);
 
-      res.json({ user, token });
+        return res.status(result.status).json({
+            message: result.message,
+            token: result.token,
+            user: result.user
+        });
 
-    } catch (error) {
-      res.status(401).json({ error: error.message });
+    } catch (e) {
+      
+        return res.status(result.status).json({
+            message: e.message,
+            error: e.message
+        });
     }
-    
-  };
-  
-  module.exports = { login };
+};
+
+module.exports = { login };

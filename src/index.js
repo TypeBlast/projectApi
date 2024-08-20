@@ -20,7 +20,7 @@ class AppController {
     }
 
     router() {
-        this.express.use('/petshopApi', require('./appModule'));
+        this.express.use('/api', require('./appModule'));
         this.express.get("/health/", (req, res) => {
             // Calcula o tempo decorrido
             const duration = Date.now() - req.startTime;
