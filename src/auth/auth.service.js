@@ -1,4 +1,3 @@
-// services/auth.service.js
 const User = require('../user/Entities/user.entity');
 const { generateToken } = require('../utils/jwt');
 
