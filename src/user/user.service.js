@@ -54,7 +54,7 @@ async function createUser(userData) {
         const userJson = newUser.toJSON();
         delete userJson.password;
 
-        return { status: 201, message: "Usuário criado com sucesso", data: userJson };
+        return { status: 201, message: "Usuário criado com sucesso." };
     } catch (e) {
         return { status: 400, message: e.message };
     }
