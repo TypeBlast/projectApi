@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 /** @type {import('sequelize').Sequelize} */
-class States extends Sequelize.Model {
+class Cities extends Sequelize.Model {
   static init(sequelize) {
     super.init({
       id: {
@@ -13,27 +13,26 @@ class States extends Sequelize.Model {
         type: Sequelize.STRING(255),
         allowNull: false,
         validate: {
-          len: [3, 255],
+          len: [1, 255],
         }
       },
-      uf: {
-        type: Sequelize.STRING(2),
+      state_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        validate: {
-          len: [2, 2],
-          isAlpha: true // Garante que o 'uf' contenha apenas letras
+        references: {
+          model: 'states',
+          key: 'id'
         }
       }
     }, {
       sequelize,
-      modelName: 'States',
+      modelName: 'Cities',
       timestamps: false
     });
-
 
 
     return this;
   }
 }
 
-module.exports = States;
+module.exports = Cities;
