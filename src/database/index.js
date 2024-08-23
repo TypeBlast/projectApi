@@ -6,6 +6,7 @@ const databaseConfig = require('../config/database');
 const User = require('../user/Entities/user.entity');
 const States = require('../state/Entities/states.entity');
 const Cities = require('../city/Entities/cities.entity'); 
+const Addresses = require('../address/Entities/addresses.entity')
 
 
 const sequelize = new Sequelize(databaseConfig);
@@ -26,6 +27,26 @@ Cities.belongsTo(States, {
   as: 'state'
 });
 
+Cities.hasMany(Addresses, {
+    foreignKey: 'city_id',
+    as: 'addresses'
+  });
+  
+Addresses.belongsTo(Cities, {
+    foreignKey: 'city_id',
+    as: 'city'
+  });
+  
+User.hasMany(Addresses, {
+    foreignKey: 'user_id',
+    as: 'addresses'
+});
+  
+Addresses.belongsTo(Users, {
+    foreignKey: 'user_id',
+    as: 'user'
+  });
+
 
 sequelize.sync()
   .then(() => console.log('Banco de dados sincronizado.'))
@@ -36,5 +57,6 @@ module.exports = {
   User,
   States,
   Cities,
+  Addresses,
   sequelize
 };
