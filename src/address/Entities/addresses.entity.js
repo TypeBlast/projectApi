@@ -11,7 +11,7 @@ class Addresses extends Sequelize.Model {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false, 
         references: {
           model: 'users',
           key: 'id'

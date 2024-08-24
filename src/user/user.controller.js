@@ -29,6 +29,13 @@ class UserController {
         return res.status(result.status).json({ message: result.message, data: result.data})
 
     }
+
+    async getUserByIdUsingRelations(req, res) {
+        const userId = req.params.id;
+        const result = await userService.getUserByIdUsingRelations(userId);
+        return res.status(result.status).json({ message: result.message, data: result.data });
+      }
+
 }
 
 module.exports = new UserController();

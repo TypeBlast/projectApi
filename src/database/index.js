@@ -1,7 +1,5 @@
-
 const { Sequelize } = require('sequelize');
 const databaseConfig = require('../config/database');
-
 
 const User = require('../user/Entities/user.entity');
 const States = require('../state/Entities/states.entity');

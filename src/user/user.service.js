@@ -1,5 +1,7 @@
 const User = require('./Entities/user.entity');
-
+const Addresses = require('../address/Entities/addresses.entity');
+const Cities = require('../city/Entities/cities.entity');
+const States = require('../state/Entities/states.entity');
 
 async function createUser(userData) {
     try {
@@ -117,6 +119,41 @@ async function deleteUserById(idUser) {
     }
 }
 
+async function getUserByIdUsingRelations(userId) {
+    try {
+      const user = await User.findOne({
+        where: { id: userId },
+        include: [
+          {
+            model: Addresses,
+            as: 'addresses',
+            include: [
+              {
+                model: Cities,
+                as: 'cities',
+                include: [
+                  {
+                    model: States,
+                    as: 'states'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      });
+  
+      if (!user) {
+        throw new Error('Usuário não encontrado.');
+      }
+  
+      return { status: 200, data: user };
+    } catch (e) {
+      return { status: 400, message: e.message };
+    }
+  
+  }
+
 module.exports = {
-    createUser, getAllUsers, getUserById, deleteUserById
+    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations
 };
