@@ -15,6 +15,7 @@ const sequelize = new Sequelize(databaseConfig);
 User.init(sequelize);
 States.init(sequelize);
 Cities.init(sequelize);
+Addresses.init(sequelize)
 
 
 States.hasMany(Cities, {
@@ -24,7 +25,7 @@ States.hasMany(Cities, {
 
 Cities.belongsTo(States, {
   foreignKey: 'state_id',
-  as: 'state'
+  as: 'states'
 });
 
 Cities.hasMany(Addresses, {
@@ -34,7 +35,7 @@ Cities.hasMany(Addresses, {
   
 Addresses.belongsTo(Cities, {
     foreignKey: 'city_id',
-    as: 'city'
+    as: 'cities'
   });
   
 User.hasMany(Addresses, {
@@ -42,7 +43,7 @@ User.hasMany(Addresses, {
     as: 'addresses'
 });
   
-Addresses.belongsTo(Users, {
+Addresses.belongsTo(User, {
     foreignKey: 'user_id',
     as: 'user'
   });
