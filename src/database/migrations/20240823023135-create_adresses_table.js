@@ -17,8 +17,6 @@ module.exports = {
           model: 'users', 
           key: 'id'       
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
       },
       complement: {
         type: Sequelize.STRING(255),
