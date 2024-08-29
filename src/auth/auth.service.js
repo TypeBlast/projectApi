@@ -16,7 +16,7 @@ const login = async (email, password) => {
             message: 'Login bem-sucedido',
             token,
             user: {
-                name: user.name, // Retorne o nome do usuário
+                name: user.name, 
                 email: user.email,
             },
         };

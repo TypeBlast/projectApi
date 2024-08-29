@@ -49,6 +49,12 @@ async function createUser(userData) {
             throw new Error('A senha deve conter pelo menos uma letra maiúscula e uma letra minúscula.');
         }
 
+        if (userData.phone) {
+            if (!/^\d{13}$/.test(userData.phone)) {
+                throw new Error('O telefone deve conter exatamente 13 dígitos.');
+            }
+        }
+
 
         const newUser = await User.create(userData);
 
@@ -98,19 +104,26 @@ async function getUserById(idUser) {
 
 async function deleteUserById(idUser) {
     try {
-
         if (!idUser || isNaN(idUser)) {
             throw new Error('Id de usuário inválido.');
         }
         
-        const user = await User.findByPk(idUser);
 
-        if (!user) 
-        {
+        const user = await User.findByPk(idUser, {
+            include: [{ model: Addresses, as: 'addresses' }]
+        });
+
+        if (!user) {
             throw new Error('Usuário não encontrado.');
         }
 
-        await user.destroy(); 
+
+        if (user.addresses.length > 0) {
+            await Addresses.destroy({ where: { user_id: idUser } });
+        }
+
+
+        await user.destroy();
         
         return { status: 200, message: "Usuário excluído com sucesso" };
 
@@ -118,6 +131,7 @@ async function deleteUserById(idUser) {
         return { status: 400, message: e.message };
     }
 }
+
 
 async function getUserByIdUsingRelations(userId) {
     try {
@@ -154,6 +168,61 @@ async function getUserByIdUsingRelations(userId) {
   
   }
 
+  async function updateUser(idUser, userData) {
+
+    try {
+        if (!idUser || isNaN(idUser)) {
+            throw new Error('Id de usuário inválido.');
+        }
+
+        const user = await User.findByPk(idUser);
+        if (!user) {
+            throw new Error('Usuário não encontrado.');
+        }
+
+ 
+        if (userData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
+            throw new Error('E-mail inválido.');
+        }
+
+        if (userData.phone && !/^\d+$/.test(userData.phone)) {
+            throw new Error('O telefone deve conter apenas números.');
+        }
+
+        if (userData.password) {
+            if (userData.password.length < 8) {
+                throw new Error('A senha deve ter pelo menos 8 caracteres.');
+            }
+
+            if (!/[A-Z]/.test(userData.password) || !/[a-z]/.test(userData.password)) {
+                throw new Error('A senha deve conter pelo menos uma letra maiúscula e uma letra minúscula.');
+            }
+        }
+
+        if (userData.cpf && !/^\d{11}$/.test(userData.cpf)) {
+            throw new Error('O CPF deve ter 11 dígitos.');
+        }
+
+        if (userData.phone) {
+            if (!/^\d{13}$/.test(userData.phone)) {
+                throw new Error('O telefone deve conter exatamente 13 dígitos.');
+            }
+        }
+
+
+
+        await user.update(userData);
+        
+        const updatedUser = await User.findByPk(idUser);
+        const userJson = updatedUser.toJSON();
+        delete userJson.password;
+
+        return { status: 200, message: 'Dados atualizados com sucesso.' };
+    } catch (e) {
+        return { status: 400, message: e.message };
+    }
+}
+
 module.exports = {
-    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations
+    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations, updateUser
 };

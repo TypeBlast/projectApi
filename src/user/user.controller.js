@@ -36,6 +36,17 @@ class UserController {
         return res.status(result.status).json({ message: result.message, data: result.data });
       }
 
+
+    async updateUser(req, res) {
+        const { id } = req.params;
+        const userData = req.body;
+    
+        const result = await userService.updateUser(id, userData);
+    
+        return res.status(result.status).json({ message: result.message, data: result.data });
+    }
+    
+
 }
 
 module.exports = new UserController();
