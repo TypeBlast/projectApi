@@ -1,21 +1,20 @@
-# Usando uma imagem base do Node.js
-FROM node:20
+# Use uma imagem base com Node.js
+FROM node:18
 
-# Definindo o diretório de trabalho dentro do contêiner
-WORKDIR /app
+# Crie e defina o diretório de trabalho
+WORKDIR /usr/src/app
 
-# Copiando o package.json e package-lock.json para o contêiner
+# Copie o package.json e o package-lock.json
 COPY package*.json ./
 
-# Instalando as dependências
+# Instale as dependências da aplicação
 RUN npm install
 
-# Copiando o restante do código para o contêiner
+# Copie o restante do código da aplicação
 COPY . .
 
-# Copiando o script de espera para o contêiner
-COPY wait-for-db.sh /usr/local/bin/wait-for-db.sh
-RUN chmod +x /usr/local/bin/wait-for-db.sh
+# Exponha a porta que a aplicação vai usar
+EXPOSE 5000
 
-# Rodando as migrations e iniciando a aplicação
-CMD ["wait-for-db.sh", "npm", "start"]
+# Comando para rodar a aplicação
+CMD ["npm", "start"]
