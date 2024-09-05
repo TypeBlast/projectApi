@@ -15,15 +15,15 @@ module.exports = {
         allowNull: false
       },
       description: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING(255),
         allowNull: false
       },
       price: {
-        type: Sequelize.DECIMAL(6, 2),  
+        type: Sequelize.DECIMAL(10, 2),  
         allowNull: false
       },
       duration: {
-        type: Sequelize.INTEGER, 
+        type: Sequelize.STRING(255), 
         allowNull: false
        }
        });
