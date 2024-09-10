@@ -12,7 +12,8 @@ const States = require('../state/Entities/states.entity');
 const Cities = require('../city/Entities/cities.entity');
 const Addresses = require('../address/Entities/addresses.entity');
 const Employer = require('../employers/Entities/employers.entity');
-const Services = require('../services/Entities/services.entity')
+const Services = require('../services/Entities/services.entity');
+const Pets = require('../pets/Entities/pets.entity');
 
 User.init(sequelize);
 States.init(sequelize);
@@ -20,6 +21,8 @@ Cities.init(sequelize);
 Addresses.init(sequelize);
 Employer.init(sequelize);
 Services.init(sequelize);
+Pets.init(sequelize)
+
 
 States.hasMany(Cities, {
   foreignKey: 'state_id',
@@ -62,5 +65,6 @@ module.exports = {
   Addresses,
   Employer,
   Services,
+  Pets,
   sequelize
 };
