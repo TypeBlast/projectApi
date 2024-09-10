@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-     await queryInterface.createTable('pets', {
+    await queryInterface.createTable('pets', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -14,14 +14,6 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false
       },
-      species: { 
-        type: Sequelize.STRING(255),
-        allowNull: false
-      },
-      pedigree: { 
-        type: Sequelize.STRING(255),
-        allowNull: true
-      },
       age: { 
         type: Sequelize.INTEGER,
         allowNull: false
@@ -31,14 +23,22 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'users', 
-          key: 'id' 
-        },
+          key: 'id'
+        }
       },
-     });
+      specie: {
+        type: Sequelize.ENUM('Cachorro', 'Gato'),
+        allowNull: false
+      },
+      size: {
+        type: Sequelize.ENUM('Pequeno', 'Médio', 'Grande'), 
+        allowNull: false,
+        defaultValue: 'Médio' 
+      }
+    });
   },
 
   async down (queryInterface, Sequelize) {
-     await queryInterface.dropTable('pets');
-  
+    await queryInterface.dropTable('pets');
   }
 };

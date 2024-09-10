@@ -33,7 +33,6 @@ module.exports = {
           model: 'employers', 
           key: 'id' 
         },
-     
       },
       pet_id: { 
         type: Sequelize.INTEGER,
@@ -42,10 +41,14 @@ module.exports = {
           model: 'pets', 
           key: 'id'
         },
-      appointment_date: { 
-        type: Sequelize.DATE,
-        allowNull: false
-      },
+        appointment_date: { 
+          type: Sequelize.DATEONLY, 
+          allowNull: false
+        },
+        appointment_time: { 
+          type: Sequelize.TIME, 
+          allowNull: false
+        }
     },
     });
   },
@@ -54,3 +57,4 @@ module.exports = {
     await queryInterface.dropTable('appointments');
   }
 };
+
