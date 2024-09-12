@@ -102,6 +102,24 @@ async function getUserById(idUser) {
     }
 }
 
+async function getUserByEmail(email) {
+    try {
+        if (!email || typeof email !== 'string') {
+            throw new Error('Email inválido.');
+        }
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            throw new Error('Usuário não encontrado.');
+        }
+
+        return { status: 200, data: user };
+    } catch (e) {
+        return { status: 400, message: e.message };
+    }
+}
+
 async function deleteUserById(idUser) {
     try {
         if (!idUser || isNaN(idUser)) {
