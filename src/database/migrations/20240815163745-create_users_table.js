@@ -37,6 +37,14 @@ module.exports = {
         type: Sequelize.ENUM('admin', 'user'),
         allowNull: false,
         defaultValue: 'user'
+      },
+      reset_token: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      reset_token_expires: {
+        type: Sequelize.DATE,
+        allowNull: true,
       }
     },
     {

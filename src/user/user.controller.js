@@ -45,8 +45,24 @@ class UserController {
     
         return res.status(result.status).json({ message: result.message, data: result.data });
     }
-    
 
+    async forgotPassword(req, res) {
+        const { email } = req.body;
+      
+        const result = await userService.forgotPassword(email);
+      
+        return res.status(result.status).json({ message: result.message });
+      }
+
+    async resetPassword(req, res) {
+        const { token, newPassword } = req.body;
+      
+        const result = await userService.resetPassword(token, newPassword);
+      
+        return res.status(result.status).json({ message: result.message });
+      }
+      
+      
 }
 
 module.exports = new UserController();

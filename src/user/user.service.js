@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 const User = require('./Entities/user.entity');
 const Addresses = require('../address/Entities/addresses.entity');
 const Cities = require('../city/Entities/cities.entity');
@@ -68,8 +71,6 @@ async function createUser(userData) {
     }
 }
 
-
-
 async function getAllUsers() {
     try{
 
@@ -131,7 +132,6 @@ async function deleteUserById(idUser) {
         return { status: 400, message: e.message };
     }
 }
-
 
 async function getUserByIdUsingRelations(userId) {
     try {
@@ -223,6 +223,80 @@ async function getUserByIdUsingRelations(userId) {
     }
 }
 
+async function forgotPassword(email) {
+    try {
+      const user = await User.findOne({ where: { email } });
+  
+      if (!user) {
+        throw new Error('Usuário não encontrado com este e-mail.');
+      }
+  
+      // Gerar o token JWT
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  
+      // Atualizar o usuário com o token e expiração
+      user.resetToken = token;
+      user.resetTokenExpires = Date.now() + 3600000; // 1 hora de expiração
+      await user.save();
+  
+      // Configurar o transporte do Brevo (Sendinblue)
+      const transporter = nodemailer.createTransport({
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false, // Use true para a porta 465
+        auth: {
+          user: process.env.BREVO_EMAIL, // Seu e-mail do Brevo
+          pass: process.env.BREVO_PASSWORD, // Senha (chave API) gerada no painel
+        },
+        logger: true, // Ativar logging
+        debug: true,  // Mostrar mais detalhes de debug
+      });
+  
+      const mailOptions = {
+        to: user.email,
+        from: process.env.BREVO_EMAIL,
+        subject: 'Recuperação de Senha',
+        text: `Você está recebendo isso porque solicitou a recuperação da senha.\n\n
+               Por favor, clique no link abaixo ou cole-o no navegador para concluir o processo de redefinição:\n\n
+               http://localhost:5000/reset/${token}\n\n
+               Se você não solicitou isso, ignore este e-mail.`,
+      };
+  
+      await transporter.sendMail(mailOptions);
+  
+      return { status: 200, message: 'E-mail de recuperação enviado.' };
+    } catch (e) {
+      return { status: 400, message: e.message };
+    }
+  }
+
+  async function resetPassword(token, newPassword) {
+    try {
+      // Verificar se o token é válido e não expirou
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      const user = await User.findOne({ where: { id: decoded.id, resetToken: token, resetTokenExpires: { [Op.gt]: Date.now() } } });
+  
+      if (!user) {
+        throw new Error('Token inválido ou expirado.');
+      }
+  
+      // Atualizar a senha
+      const salt = bcrypt.genSaltSync();
+      user.password = bcrypt.hashSync(newPassword, salt);
+  
+      // Limpar o token e expiração
+      user.resetToken = null;
+      user.resetTokenExpires = null;
+  
+      await user.save();
+  
+      return { status: 200, message: 'Senha redefinida com sucesso.' };
+    } catch (e) {
+      return { status: 400, message: e.message };
+    }
+  }
+
 module.exports = {
-    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations, updateUser
+    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations, updateUser, forgotPassword, resetPassword
 };

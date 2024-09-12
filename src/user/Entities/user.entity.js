@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
+const { DataTypes } = Sequelize;
 
 class User extends Sequelize.Model {
   static init(sequelize) {
@@ -63,7 +64,15 @@ class User extends Sequelize.Model {
         type: Sequelize.ENUM('admin', 'user'),
         allowNull: false,
         defaultValue: 'user'
-      }
+      },
+      reset_token: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      reset_token_expires: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     }, {
       sequelize,
       timestamps: false,

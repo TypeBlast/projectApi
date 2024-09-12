@@ -8,6 +8,7 @@ router.get('/adresses/:id', userController.getUserByIdUsingRelations);
 router.put('/:id', userController.updateUser)
 router.delete('/:id', userController.deleteUserById)
 
-
+router.post('/forgot-password', userController.forgotPassword);
+router.post('/reset-password', userController.resetPassword);
 
 module.exports = router;
