@@ -1,5 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); // Importa o middleware CORS
+
 dotenv.config();
 
 const configDatabase = require('./database/index');
@@ -12,6 +14,7 @@ class AppController {
     }
 
     middlewares() {
+        this.express.use(cors()); // Habilita CORS para todas as rotas
         this.express.use(express.json());
         this.express.use((req, res, next) => {
             req.startTime = Date.now();
