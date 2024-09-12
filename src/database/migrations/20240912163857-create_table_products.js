@@ -18,16 +18,26 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: true
       },
-      category: {
-        type: Sequelize.STRING(255),
-        allowNull: false
+      category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'categories',
+          key: 'id'
+        }
+ 
       },
-      species: {
-        type: Sequelize.STRING(255),
-        allowNull: false
+      species_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'species',
+          key: 'id' 
+        }
+
       },
       price: {
-        type: Sequelize.DECIMAL(10, 2), 
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
       stock: {
@@ -38,7 +48,7 @@ module.exports = {
       url: {
         type: Sequelize.STRING(500),
         allowNull: true
-      },
+      }
     });
   },
 
