@@ -20,13 +20,21 @@ class Product extends Sequelize.Model {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      category: {
-        type: Sequelize.STRING(255),
+      category_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'categories',
+          key: 'id'
+        }
       },
-      species: {
-        type: Sequelize.STRING(255),
+      species_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'species',
+          key: 'id'
+        }
       },
       price: {
         type: Sequelize.DECIMAL(10, 2),
@@ -51,10 +59,14 @@ class Product extends Sequelize.Model {
     }, {
       sequelize,
       tableName: 'products',
-      timestamps: false,
     });
 
     return this;
+  }
+
+  static associate(models) {
+    this.belongsTo(models.Category, { foreignKey: 'category_id', as: 'category' });
+    this.belongsTo(models.Species, { foreignKey: 'species_id', as: 'species' });
   }
 }
 
