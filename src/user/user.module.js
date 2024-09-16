@@ -8,6 +8,7 @@ router.get('/email', userController.getUserByEmail);
 router.get('/adresses/:id', userController.getUserByIdUsingRelations); 
 router.put('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUserById);
+router.get('/pets/:id', userController.getUserByIdWithPetsAndAppointments);
 
 
 

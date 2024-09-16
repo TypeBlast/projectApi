@@ -2,6 +2,10 @@ const User = require('./Entities/user.entity');
 const Addresses = require('../address/Entities/addresses.entity');
 const Cities = require('../city/Entities/cities.entity');
 const States = require('../state/Entities/states.entity');
+const Pets = require('../pets/Entities/pets.entity')
+const Appointments = require('../appointments/Entities/appointments.entity')
+const Services = require('../services/Entities/services.entity')
+const Employers = require('../employers/Entities/employers.entity')
 
 async function createUser(userData) {
     try {
@@ -51,7 +55,7 @@ async function createUser(userData) {
 
         if (userData.phone) {
             if (!/^\d{13}$/.test(userData.phone)) {
-                throw new Error('O telefone deve conter exatamente 13 dígitos.');
+                throw new Error('O telefone deve conter exatamente 13 dígitos, incluindo o código postal do país e o seu DDD.');
             }
         }
 
@@ -66,7 +70,7 @@ async function createUser(userData) {
     } catch (e) {
         return { status: 400, message: e.message };
     }
-}
+};
 
 
 
@@ -82,7 +86,7 @@ async function getAllUsers() {
     return { status: 400, message: e.message };
  }
 
-}
+};
 
 async function getUserById(idUser) {
     try {
@@ -100,7 +104,7 @@ async function getUserById(idUser) {
     } catch (e) {
         return { status: 400, message: e.message };
     }
-}
+};
 
 async function getUserByEmail(email) {
     try {
@@ -118,7 +122,7 @@ async function getUserByEmail(email) {
     } catch (e) {
         return { status: 400, message: e.message };
     }
-}
+};
 
 async function deleteUserById(idUser) {
     try {
@@ -148,7 +152,7 @@ async function deleteUserById(idUser) {
     } catch (e) {
         return { status: 400, message: e.message };
     }
-}
+};
 
 
 async function getUserByIdUsingRelations(userId) {
@@ -184,7 +188,48 @@ async function getUserByIdUsingRelations(userId) {
       return { status: 400, message: e.message };
     }
   
-  }
+  };
+
+  const getUserByIdWithPetsAndAppointments = async (userId) => {
+    try {
+      const user = await User.findOne({
+        where: { id: userId },
+        include: [
+          {
+            model: Pets,
+            as: 'pets'
+          },
+          {
+            model: Appointments,
+            as: 'appointments',
+            include: [
+              {
+                model: Pets,
+                as: 'pets'
+              },
+              {
+                model: Services, 
+                as: 'services'
+              },
+              {
+                model: Employers, 
+                as: 'employers'
+              }
+            ]
+          }
+        ]
+      });
+  
+      if (!user) {
+        throw new Error('Usuário não encontrado.');
+      }
+  
+      return { status: 200, data: user };
+  
+    } catch (e) {
+      return { status: 400, message: e.message };
+    }
+  };
 
   async function updateUser(idUser, userData) {
 
@@ -242,5 +287,5 @@ async function getUserByIdUsingRelations(userId) {
 }
 
 module.exports = {
-    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations, updateUser
+    createUser, getAllUsers, getUserById, deleteUserById, getUserByIdUsingRelations, updateUser, getUserByEmail, getUserByIdWithPetsAndAppointments
 };

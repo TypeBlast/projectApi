@@ -10,7 +10,7 @@ class EmployerService {
 
    
       if (!/^\d{13}$/.test(employerData.phone)) {
-        throw new Error('O telefone deve conter 13 dígitos numéricos.');
+        throw new Error('O telefone deve conter 13 dígitos numéricos, incluindo o código postal e seu DDD.');
       }
 
     

@@ -14,11 +14,7 @@ const login = async (email, password) => {
         return {
             status: 201,
             message: 'Login bem-sucedido',
-            token,
-            user: {
-                name: user.name, 
-                email: user.email,
-            },
+            token
         };
 
     } catch (e) {

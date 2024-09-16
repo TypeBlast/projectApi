@@ -1,59 +1,63 @@
-'use strict';
+const Sequelize = require('sequelize');
 
-/** @type {import('sequelize-cli').Migration} */
-module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('appointments', {
+class Appointments extends Sequelize.Model {
+  static init(sequelize) {
+    super.init({
       id: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
-        allowNull: false
+        autoIncrement: true,
+        allowNull: false,
       },
-      user_id: { 
+      user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'users',
           key: 'id'
-        },
+        }
       },
-      service_id: { 
+      service_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'services',
           key: 'id'
-        },
+        }
       },
-      employer_id: { 
+      employer_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'employers',
           key: 'id'
-        },
+        }
       },
-      pet_id: { 
+      pet_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'pets',
           key: 'id'
-        },
+        }
       },
-      appointment_date: { 
+      appointment_date: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: false,
       },
-      appointment_time: { 
+      appointment_time: {
         type: Sequelize.TIME,
-        allowNull: false
-      },
+        allowNull: false,
+      }
+    }, {
+      sequelize,
+      tableName: 'appointments',
     });
-  },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('appointments');
+    return this;
   }
-};
+
+
+}
+
+module.exports = Appointments;

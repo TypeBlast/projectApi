@@ -1,7 +1,5 @@
-const express = require('express');
+const router = require('express').Router()
 const EmployerController = require('./employers.controller');
-
-const router = express.Router();
 
 router.post('/',  EmployerController.createEmployer);
 router.get('/', EmployerController.getAllEmployers);

@@ -10,8 +10,7 @@ const login = async (req, res) => {
 
         return res.status(result.status).json({
             message: result.message,
-            token: result.token,
-            user: result.user
+            token: result.token
         });
 
     } catch (e) {

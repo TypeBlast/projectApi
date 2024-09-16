@@ -1,7 +1,6 @@
 const { Sequelize } = require('sequelize');
 const databaseConfig = require('../config/database');
 
-
 const env = process.env.NODE_ENV || 'development';
 const config = databaseConfig[env];
 
@@ -14,6 +13,11 @@ const Addresses = require('../address/Entities/addresses.entity');
 const Employer = require('../employers/Entities/employers.entity');
 const Services = require('../services/Entities/services.entity');
 const Pets = require('../pets/Entities/pets.entity');
+const Products = require('../products/Entities/products.entity');
+const Categories = require('../categories/Entities/categories.entity');
+const Species = require('../species/Entities/species.entity')
+const Appointments = require('../appointments/Entities/appointments.entity')
+
 
 User.init(sequelize);
 States.init(sequelize);
@@ -21,7 +25,11 @@ Cities.init(sequelize);
 Addresses.init(sequelize);
 Employer.init(sequelize);
 Services.init(sequelize);
-Pets.init(sequelize)
+Pets.init(sequelize);
+Products.init(sequelize);
+Categories.init(sequelize);
+Species.init(sequelize);
+Appointments.init(sequelize);
 
 
 States.hasMany(Cities, {
@@ -51,8 +59,81 @@ User.hasMany(Addresses, {
 
 Addresses.belongsTo(User, {
   foreignKey: 'user_id',
-  as: 'user'
+  as: 'users'
 });
+
+Products.belongsTo(Categories, {
+   foreignKey: 'category_id',
+    as: 'categories'
+});
+
+Products.belongsTo(Species, {
+   foreignKey: 'species_id',
+    as: 'species'
+});
+
+Categories.hasMany(Products, {
+   foreignKey: 'category_id',
+    as: 'products'
+});
+
+Species.hasMany(Products, {
+   foreignKey: 'species_id',
+    as: 'products' 
+});
+
+User.hasMany(Appointments, {
+    foreignKey: 'user_id',
+     as: 'appointments' 
+});
+
+Services.hasMany(Appointments, {
+    foreignKey: 'service_id',
+     as: 'appointments' 
+});
+
+Employer.hasMany(Appointments, {
+    foreignKey: 'employer_id',
+     as: 'appointments' 
+});
+
+Pets.hasMany(Appointments, {
+    foreignKey: 'pet_id',
+     as: 'appointments' 
+});
+
+Appointments.belongsTo(User, 
+  { foreignKey: 'user_id',
+     as: 'users' 
+});
+
+Appointments.belongsTo(Services, {
+   foreignKey: 'service_id',
+    as: 'services' 
+});
+
+Appointments.belongsTo(Employer, {
+   foreignKey: 'employer_id',
+    as: 'employers' 
+});
+
+Appointments.belongsTo(Pets, {
+   foreignKey: 'pet_id',
+    as: 'pets' 
+});
+
+Pets.belongsTo(User, {
+   foreignKey: 'user_id',
+    as: 'users' 
+});
+
+User.hasMany(Pets, {
+   foreignKey: 'user_id',
+    as: 'pets' 
+});
+
+
+
 
 sequelize.sync()
   .then(() => console.log('Banco de dados sincronizado.'))
@@ -66,5 +147,9 @@ module.exports = {
   Employer,
   Services,
   Pets,
+  Products,
+  Categories,
+  Species,
+  Appointments,
   sequelize
 };

@@ -9,6 +9,8 @@ const addressesModule = require('./address/addresses.module')
 const employersModule = require('./employers/employers.module')
 const servicesModule = require('./services/services.module')
 const petsModule = require('./pets/pets.module')
+const productsModule = require('./products/products.module')
+const appointmentsModule = require('./appointments/appointments.module')
 
 router.use('/user', userModule);
 router.use('/auth', authModule);
@@ -18,5 +20,7 @@ router.use('/addresses', addressesModule)
 router.use('/employers', employersModule)
 router.use('/services', servicesModule)
 router.use('/pets', petsModule)
+router.use('/products', productsModule)
+router.use('/appointments', appointmentsModule)
 
 module.exports = router;

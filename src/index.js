@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors'); // Importa o middleware CORS
+const cors = require('cors'); 
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ class AppController {
     }
 
     middlewares() {
-        this.express.use(cors()); // Habilita CORS para todas as rotas
+        this.express.use(cors()); 
         this.express.use(express.json());
         this.express.use((req, res, next) => {
             req.startTime = Date.now();
@@ -25,7 +25,7 @@ class AppController {
     router() {
         this.express.use('/api', require('./appModule'));
         this.express.get("/health/", (req, res) => {
-            // Calcula o tempo decorrido
+
             const duration = Date.now() - req.startTime;
 
             res.send({

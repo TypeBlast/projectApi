@@ -23,7 +23,7 @@ class UserController {
 
     async getUserByEmail(req, res) {
         try {
-            const { email } = req.body; 
+            const { email } = req.params; 
     
             const result = await userService.getUserByEmail(email);
     
@@ -58,6 +58,12 @@ class UserController {
         return res.status(result.status).json({ message: result.message, data: result.data });
     }
     
+
+    async getUserByIdWithPetsAndAppointments(req, res) {
+        const userId = req.params.id;
+        const result = await userService.getUserByIdWithPetsAndAppointments(userId);
+        return res.status(result.status).json({ message: result.message, data: result.data });
+      }
 
 }
 

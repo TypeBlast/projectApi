@@ -13,11 +13,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING(255),
         allowNull: false
-      },
-      url: {
-        type: Sequelize.STRING(500),
-        allowNull: true 
-      },
+      }
     });
   },
 
