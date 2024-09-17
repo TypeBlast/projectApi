@@ -17,6 +17,8 @@ const Products = require('../products/Entities/products.entity');
 const Categories = require('../categories/Entities/categories.entity');
 const Species = require('../species/Entities/species.entity')
 const Appointments = require('../appointments/Entities/appointments.entity')
+const Carts = require('../carts/Entities/carts.entity')
+const Cart_items = require('../carts/Entities/cart_items.entity')
 
 
 User.init(sequelize);
@@ -30,6 +32,8 @@ Products.init(sequelize);
 Categories.init(sequelize);
 Species.init(sequelize);
 Appointments.init(sequelize);
+Carts.init(sequelize);
+Cart_items.init(sequelize);
 
 
 States.hasMany(Cities, {
@@ -132,6 +136,35 @@ User.hasMany(Pets, {
     as: 'pets' 
 });
 
+User.hasMany(Carts, {
+   foreignKey: 'user_id',
+    as: 'carts' 
+});
+
+Carts.belongsTo(User, {
+   foreignKey: 'user_id',
+    as: 'users' 
+});
+
+Carts.hasMany(Cart_items, {
+   foreignKey: 'cart_id',
+    as: 'cart_items' 
+});
+
+Cart_items.belongsTo(Carts, {
+   foreignKey: 'cart_id',
+    as: 'carts' 
+});
+
+Products.hasMany(Cart_items, {
+   foreignKey: 'product_id',
+    as: 'cart_items' 
+});
+
+Cart_items.belongsTo(Products, {
+   foreignKey: 'product_id',
+    as: 'products' 
+});
 
 
 
@@ -151,5 +184,7 @@ module.exports = {
   Categories,
   Species,
   Appointments,
+  Carts,
+  Cart_items,
   sequelize
 };
