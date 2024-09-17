@@ -17,7 +17,7 @@ class Products extends Sequelize.Model {
         }
       },
       description: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(3000),
         allowNull: true,
       },
       category_id: {

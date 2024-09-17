@@ -10,7 +10,7 @@ module.exports = {
       ('Coelho'),
       ('Peixe'),
       ('Pássaro'),
-      ('Tartaruga'),
+      ('Réptil'),
       ('Hamster');
     `);
   },
@@ -18,7 +18,7 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     await queryInterface.sequelize.query(`
       DELETE FROM species WHERE name IN
-      ('Cachorro', 'Gato', 'Coelho', 'Peixe', 'Pássaro', 'Tartaruga', 'Hamster');
+      ('Cachorro', 'Gato', 'Coelho', 'Peixe', 'Pássaro', 'Réptil', 'Hamster');
     `);
   }
 };
