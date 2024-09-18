@@ -19,6 +19,14 @@ class CartService {
         throw new Error(`Estoque insuficiente para o produto ${product.name}. Disponível: ${product.stock}`);
       }
 
+    
+      const cartItems = await Cart_items.findAll({ where: { cart_id: cart.id } });
+      const totalItemsInCart = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+      if (totalItemsInCart + quantity > 10) {
+        throw new Error('Não é possível adicionar mais produtos. Limite de 10 itens no carrinho atingido.');
+      }
+
       product.stock -= quantity;
       await product.save();
 
@@ -35,7 +43,7 @@ class CartService {
         });
       }
 
-      return { status: 200, message: 'Produto adicionado ao carrinho com sucesso.', data: cart };
+      return { status: 200, message: 'Produto adicionado ao carrinho com sucesso.' };
     } catch (error) {
       return { status: 400, message: error.message };
     }
@@ -47,32 +55,37 @@ class CartService {
       if (!cart) {
         throw new Error('Carrinho não encontrado.');
       }
-
+  
       const cartItem = await Cart_items.findOne({ where: { cart_id: cart.id, product_id: productId } });
       if (!cartItem) {
         throw new Error('Item não encontrado no carrinho.');
       }
-
+  
+      if (quantity > cartItem.quantity) {
+        throw new Error(`Você está tentando remover mais produtos do que possui no carrinho. Quantidade disponível: ${cartItem.quantity}`);
+      }
+  
       const product = await Products.findByPk(productId);
       if (!product) {
         throw new Error('Produto não encontrado.');
       }
-
+  
       product.stock += quantity;
       await product.save();
-
+  
       if (cartItem.quantity <= quantity) {
         await cartItem.destroy();
       } else {
         cartItem.quantity -= quantity;
         await cartItem.save();
       }
-
-      return { status: 200, message: 'Item removido do carrinho com sucesso.', data: cart };
+  
+      return { status: 200, message: 'Item removido do carrinho com sucesso.' };
     } catch (error) {
       return { status: 400, message: error.message };
     }
   }
+  
 
   
   async clearCart(userId) {
@@ -93,7 +106,7 @@ class CartService {
       }
 
       await Cart_items.destroy({ where: { cart_id: cart.id } });
-      return { status: 200, message: 'Carrinho limpo com sucesso.', data: cart };
+      return { status: 200, message: 'Carrinho limpo com sucesso.'};
     } catch (error) {
       return { status: 400, message: error.message };
     }
