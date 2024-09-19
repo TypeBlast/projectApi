@@ -54,6 +54,28 @@ class EmployerService {
     }
   }
 
+   async getEmployersByServiceId(serviceId) {
+    try {
+      if (!serviceId || isNaN(serviceId)) {
+        throw new Error('ID do serviço inválido.');
+      }
+
+      const employers = await Employer.findAll({
+        where: {
+          serviceId: serviceId
+        }
+      });
+
+      if (employers.length === 0) {
+        return { status: 404, message: 'Nenhum funcionário encontrado para este serviço.' };
+      }
+
+      return { status: 200, data: employers };
+    } catch (e) {
+      return { status: 400, message: e.message };
+    }
+  }
+  
   async updateEmployer(employerId, employerData) {
     try {
    

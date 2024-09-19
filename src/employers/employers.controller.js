@@ -18,6 +18,13 @@ class EmployerController {
     return res.status(result.status).json({ message: result.message, data: result.data});
   }
 
+  async getEmployersByServiceId(req, res) {
+    const { serviceId } = req.params;
+    const result = await EmployerService.getEmployersByServiceId(serviceId);
+    return res.status(result.status).json({ message: result.message, data: result.data });
+  }
+
+
   async updateEmployer(req, res) {
     const { id } = req.params;
     const employerData = req.body;
