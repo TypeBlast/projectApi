@@ -11,10 +11,16 @@ const login = async (email, password) => {
 
         const token = generateToken(user);
 
+        // Inclua as informações do usuário na resposta
         return {
             status: 201,
             message: 'Login bem-sucedido',
-            token
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
         };
 
     } catch (e) {
@@ -24,6 +30,5 @@ const login = async (email, password) => {
         };
     }
 };
-
 
 module.exports = { login };
