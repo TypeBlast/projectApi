@@ -166,6 +166,12 @@ Cart_items.belongsTo(Products, {
     as: 'products' 
 });
 
+Services.hasMany(Employer, {
+  foreignKey: 'serviceId',
+});
+Employer.belongsTo(Services, {
+  foreignKey: 'serviceId',
+});
 
 
 sequelize.sync()

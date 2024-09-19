@@ -22,6 +22,13 @@ module.exports = {
         position: { 
           type: Sequelize.STRING(255),
           allowNull: false
+        },
+        service_id: { 
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'services',
+            key: 'id',
+          },
         }
       });
     

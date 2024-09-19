@@ -21,7 +21,7 @@ class Employer extends Sequelize.Model {
         allowNull: false,
         unique: true,
         validate: {
-          is: /^\d{10,20}$/  
+          is: /^\d{10,20}$/
         }
       },
       position: {
@@ -30,6 +30,13 @@ class Employer extends Sequelize.Model {
         validate: {
           len: [2, 255],
         }
+      },
+      service_id: {  
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'services',
+          key: 'id',
+        },
       }
     }, {
       sequelize,
@@ -41,4 +48,4 @@ class Employer extends Sequelize.Model {
   }
 }
 
-module.exports = Employer;
+module.exports = Employer
