@@ -23,7 +23,11 @@ class ProductController {
     const result = await productService.getProductsByCategory(category_id);
     return res.status(result.status).json({ message: result.message, data: result.data });
   }
-
+  async getProductsByName(req, res) {
+    const { name } = req.params; // Captura o parâmetro de nome diretamente da URL
+    const result = await productService.getProductsByName(name);
+    return res.status(result.status).json({ message: result.message, data: result.data });
+  }
   async updateProduct(req, res) {
     const { id } = req.params;
     const productData = req.body;
@@ -36,6 +40,7 @@ class ProductController {
     const result = await productService.deleteProduct(id);
     return res.status(result.status).json({ message: result.message });
   }
+
 }
 
 module.exports = new ProductController();

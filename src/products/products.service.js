@@ -1,4 +1,5 @@
 const Products = require('./Entities/products.entity');
+const { Op } = require('sequelize');
 
 class ProductService {
   async createProduct(productData) {
@@ -69,6 +70,30 @@ class ProductService {
       return { status: 200, data: products };
     } catch (error) {
       return { status: 400, message: error.message };
+    }
+  }
+
+  async getProductsByName(name) {
+    try {
+      if (!name || typeof name !== 'string') {
+        return { status: 400, message: 'Nome do produto inválido.', data: null };
+      }
+      
+      const products = await Products.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${name}%` 
+          }
+        }
+      });
+  
+      if (products.length === 0) {
+        return { status: 404, message: 'Nenhum produto encontrado.', data: null };
+      }
+  
+      return { status: 200, data: products };
+    } catch (error) {
+      return { status: 500, message: error.message, data: null };
     }
   }
 
