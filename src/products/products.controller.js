@@ -18,6 +18,12 @@ class ProductController {
     return res.status(result.status).json({ message: result.message, data: result.data });
   }
 
+  async getProductsByCategory(req, res) {
+    const { category_id } = req.params;  // Pegando o category_id da rota
+    const result = await productService.getProductsByCategory(category_id);
+    return res.status(result.status).json({ message: result.message, data: result.data });
+  }
+
   async updateProduct(req, res) {
     const { id } = req.params;
     const productData = req.body;

@@ -52,6 +52,26 @@ class ProductService {
     }
   }
 
+  async getProductsByCategory(category_id) {
+    try {
+      if (!category_id || isNaN(category_id)) {
+        throw new Error('ID da categoria inválido.');
+      }
+
+      const products = await Products.findAll({
+        where: { category_id }
+      });
+
+      if (!products.length) {
+        return { status: 404, message: 'Nenhum produto encontrado para esta categoria.' };
+      }
+
+      return { status: 200, data: products };
+    } catch (error) {
+      return { status: 400, message: error.message };
+    }
+  }
+
   async updateProduct(productId, productData) {
     try {
       if (!productId || isNaN(productId)) {
