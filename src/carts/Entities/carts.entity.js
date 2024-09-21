@@ -16,12 +16,7 @@ class Carts extends Sequelize.Model {
           model: 'users',
           key: 'id',
         }
-      },
-      status: {
-        type: Sequelize.ENUM('Aberto', 'Completo', 'Cancelado'),
-        allowNull: false,
-        defaultValue: 'Aberto',
-      },
+      }
     }, {
       sequelize,
       tableName: 'carts',

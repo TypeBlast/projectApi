@@ -4,7 +4,7 @@ class CartService {
 
   async addToCart(userId, productId, quantity) {
     try {
-      let cart = await Carts.findOne({ where: { user_id: userId, status: 'Aberto' } });
+      let cart = await Carts.findOne({ where: { user_id: userId } });
 
       if (!cart) {
         cart = await Carts.create({ user_id: userId });
@@ -51,7 +51,7 @@ class CartService {
 
   async removeFromCart(userId, productId, quantity) {
     try {
-      const cart = await Carts.findOne({ where: { user_id: userId, status: 'Aberto' } });
+      const cart = await Carts.findOne({ where: { user_id: userId } });
       if (!cart) {
         throw new Error('Carrinho não encontrado.');
       }
@@ -90,7 +90,7 @@ class CartService {
   
   async clearCart(userId) {
     try {
-      const cart = await Carts.findOne({ where: { user_id: userId, status: 'Aberto' } });
+      const cart = await Carts.findOne({ where: { user_id: userId } });
       if (!cart) {
         throw new Error('Carrinho não encontrado.');
       }
@@ -115,7 +115,7 @@ class CartService {
 
   async getCart(userId) {
     try {
-      const cart = await Carts.findOne({ where: { user_id: userId, status: 'Aberto' } });
+      const cart = await Carts.findOne({ where: { user_id: userId } });
       if (!cart) {
         throw new Error('Carrinho não encontrado.');
       }
@@ -139,7 +139,7 @@ class CartService {
 
   async deleteCart(userId) {
     try {
-      const cart = await Carts.findOne({ where: { user_id: userId, status: 'Aberto' } });
+      const cart = await Carts.findOne({ where: { user_id: userId } });
       if (!cart) {
         throw new Error('Carrinho não encontrado.');
       }

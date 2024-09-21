@@ -17,11 +17,6 @@ module.exports = {
           model: 'users', 
           key: 'id'
         }
-      },
-      status: {
-        type: Sequelize.ENUM('Aberto', 'Completo', 'Cancelado'),
-        allowNull: false,
-        defaultValue: 'Aberto'
       }
     });
   },

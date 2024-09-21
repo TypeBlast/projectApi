@@ -15,10 +15,13 @@ const Services = require('../services/Entities/services.entity');
 const Pets = require('../pets/Entities/pets.entity');
 const Products = require('../products/Entities/products.entity');
 const Categories = require('../categories/Entities/categories.entity');
-const Species = require('../species/Entities/species.entity')
-const Appointments = require('../appointments/Entities/appointments.entity')
-const Carts = require('../carts/Entities/carts.entity')
-const Cart_items = require('../carts/Entities/cart_items.entity')
+const Species = require('../species/Entities/species.entity');
+const Appointments = require('../appointments/Entities/appointments.entity');
+const Carts = require('../carts/Entities/carts.entity');
+const Cart_items = require('../carts/Entities/cart_items.entity');
+const Payments = require('../payments/Entities/payments.entity');
+const Orders = require('../orders/Entities/orders.entity')
+const Order_items = require('../orders/Entities/order_items.entity')
 
 
 User.init(sequelize);
@@ -34,6 +37,9 @@ Species.init(sequelize);
 Appointments.init(sequelize);
 Carts.init(sequelize);
 Cart_items.init(sequelize);
+Payments.init(sequelize);
+Orders.init(sequelize);
+Order_items.init(sequelize);
 
 
 States.hasMany(Cities, {
@@ -169,9 +175,93 @@ Cart_items.belongsTo(Products, {
 Services.hasMany(Employer, {
   foreignKey: 'serviceId',
 });
+
 Employer.belongsTo(Services, {
   foreignKey: 'serviceId',
 });
+
+Orders.belongsTo(User, {
+   foreignKey: 'user_id',
+    as: 'users' 
+});
+
+User.hasMany(Orders, {
+   foreignKey: 'user_id',
+    as: 'orders' 
+});
+
+Orders.belongsTo(Payments, {
+   foreignKey: 'payment_id',
+    as: 'payments' 
+});
+
+Payments.hasOne(Orders, {
+   foreignKey: 'payment_id',
+    as: 'orders' 
+});
+
+Orders.belongsTo(Addresses, {
+   foreignKey: 'address_id',
+    as: 'addresses' 
+});
+
+Addresses.hasMany(Orders, {
+   foreignKey: 'address_id',
+    as: 'orders' 
+});
+
+Order_items.belongsTo(Orders, {
+   foreignKey: 'order_id',
+    as: 'orders' 
+});
+
+Orders.hasMany(Order_items, {
+   foreignKey: 'order_id',
+    as: 'order_items' 
+});
+
+Order_items.belongsTo(Products, {
+   foreignKey: 'product_id',
+    as: 'products' 
+});
+
+Products.hasMany(Order_items, {
+   foreignKey: 'product_id',
+    as: 'order_items' 
+});
+
+Payments.belongsTo(User, {
+   foreignKey: 'user_id',
+    as: 'users' 
+});
+
+User.hasMany(Payments, {
+   foreignKey: 'user_id',
+    as: 'payments' 
+});
+
+Payments.belongsToMany(Cart_items, {
+   through: 'payment_cart_items',
+    foreignKey: 'payment_id',
+     as: 'cart_items' 
+});
+
+Cart_items.belongsToMany(Payments, {
+   through: 'payment_cart_items',
+    foreignKey: 'cart_items_id',
+     as: 'payments'
+});
+
+Payments.belongsTo(Carts, {
+   foreignKey: 'cart_id',
+    as: 'carts' 
+});
+
+Carts.hasMany(Payments, {
+   foreignKey: 'cart_id',
+    as: 'payments' 
+});
+
 
 
 sequelize.sync()
@@ -192,5 +282,8 @@ module.exports = {
   Appointments,
   Carts,
   Cart_items,
+  Payments,
+  Orders,
+  Order_items,
   sequelize
 };
