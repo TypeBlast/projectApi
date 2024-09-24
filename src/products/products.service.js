@@ -97,6 +97,47 @@ class ProductService {
     }
   }
 
+
+  async getFilteredProducts(category_id, species_id, order) {
+    try {
+      const categoryId = Number(category_id);
+      const speciesId = Number(species_id);
+  
+      if (isNaN(categoryId) || isNaN(speciesId)) {
+        throw new Error('ID de categoria ou espécie inválido.');
+      }
+  
+     
+      let validOrder = 'ASC'; 
+      if (order) {
+        const orderUpper = order.toUpperCase();
+        if (['ASC', 'DESC'].includes(orderUpper)) {
+          validOrder = orderUpper; 
+        } else {
+          console.warn('Ordem inválida fornecida, usando ASC como padrão.');
+        }
+      }
+  
+      const products = await Products.findAll({
+        where: {
+          category_id: categoryId,
+          species_id: speciesId,
+        },
+        order: [['price', validOrder]], 
+      });
+  
+      if (!products.length) {
+        return { status: 404, message: 'Nenhum produto encontrado para essa categoria e espécie.' };
+      }
+  
+      return { status: 200, data: products };
+    } catch (error) {
+      console.error("Erro ao filtrar produtos:", error.message); 
+      return { status: 400, message: error.message };
+    }
+  }
+  
+
   async updateProduct(productId, productData) {
     try {
       if (!productId || isNaN(productId)) {

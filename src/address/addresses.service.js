@@ -17,6 +17,29 @@ const createAddress = async (addressData, userId) => {
       throw new Error('O CEP deve conter apenas números e ter entre 8 a 10 dígitos.');
     }
 
+    
+    const existingAddresses = await Addresses.findAll({
+      where: { user_id: userId },
+    });
+
+    if (existingAddresses.length >= 3) {
+      return { status: 400, message: 'Você só pode criar até 3 endereços.' };
+    }
+
+    
+    const duplicateAddress = await Addresses.findOne({
+      where: { 
+        user_id: userId, 
+        number: number, 
+        cep: cep, 
+        city_id: city_id 
+      },
+    });
+
+    if (duplicateAddress) {
+      return { status: 400, message: 'Este endereço já está cadastrado.' };
+    }
+
     const address = await Addresses.create({
       ...addressData,
       user_id: userId

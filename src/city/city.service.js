@@ -17,7 +17,6 @@ async function getAllCitiesByStateId(stateId) {
             return { status: 404, message: 'Estado não encontrado.' };
         }
 
-
         return { status: 200, data: cities };
 
     } catch (e) {
@@ -28,7 +27,6 @@ async function getAllCitiesByStateId(stateId) {
 
 async function getCityById(cityId) {
     try {
-
     
         const city = await Cities.findByPk(cityId);
 

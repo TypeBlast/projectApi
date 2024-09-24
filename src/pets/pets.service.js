@@ -21,6 +21,30 @@ const createPet = async (petData, userId) => {
       throw new Error('Tamanho inválido. Deve ser pequeno, médio ou grande.');
     }
 
+    if (/\d/.test(name)) {
+      throw new Error('O nome do pet não pode conter números.');
+    }
+
+ 
+    const petsCount = await Pets.count({ where: { user_id: userId } });
+    if (petsCount >= 15) {
+      throw new Error('Você já atingiu o limite de 15 pets cadastrados.');
+    }
+
+    
+    const existingPet = await Pets.findOne({
+      where: { 
+        name, 
+        age, 
+        specie, 
+        size, 
+        user_id: userId 
+      }
+    });
+    if (existingPet) {
+      throw new Error('Você já cadastrou um pet com as mesmas informações.');
+    }
+
     const pet = await Pets.create({
       ...petData,
       user_id: userId

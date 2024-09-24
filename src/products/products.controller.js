@@ -19,12 +19,12 @@ class ProductController {
   }
 
   async getProductsByCategory(req, res) {
-    const { category_id } = req.params;  // Pegando o category_id da rota
+    const { category_id } = req.params;  
     const result = await productService.getProductsByCategory(category_id);
     return res.status(result.status).json({ message: result.message, data: result.data });
   }
   async getProductsByName(req, res) {
-    const { name } = req.params; // Captura o parâmetro de nome diretamente da URL
+    const { name } = req.params; 
     const result = await productService.getProductsByName(name);
     return res.status(result.status).json({ message: result.message, data: result.data });
   }
@@ -40,6 +40,16 @@ class ProductController {
     const result = await productService.deleteProduct(id);
     return res.status(result.status).json({ message: result.message });
   }
+
+
+  async getFilteredProducts(req, res) {
+    const { category_id, species_id } = req.params;
+    const { order } = req.query; 
+  
+    const result = await productService.getFilteredProducts(category_id, species_id, order);
+    return res.status(result.status).json({ message: result.message, data: result.data });
+  }
+  
 
 }
 
