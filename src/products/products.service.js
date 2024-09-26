@@ -31,12 +31,31 @@ class ProductService {
 
   async getAllProducts() {
     try {
-      const products = await Products.findAll();
+      const products = await Products.findAll({
+        include: [
+          { model: Categories, as: 'categories', attributes: ['name'] },
+          { model: Species, as: 'species', attributes: ['name'] }
+        ]
+      });
+  
+      // Mapear os produtos para um array com os dados necessários
+      const productData = products.map(product => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+
+        category: product.categories.name,
+        species: product.species.name,
+        url: product.url
+      }));
+  
       return { status: 200, data: products };
     } catch (error) {
       return { status: 400, message: error.message };
     }
   }
+  
 
   async getProductById(productId) {
     try {
@@ -55,24 +74,12 @@ class ProductService {
         return { status: 404, message: 'Produto não encontrado.' };
       }
   
-      // Extraindo os dados corretamente para o retorno
-      const productData = {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        stock: product.stock,
-        category: product.categories.name,
-        species: product.species.name
-      };
-  
       return { status: 200, data: productData };
     } catch (error) {
       return { status: 400, message: error.message };
     }
   }
   
-  
-
   async getProductsByCategory(category_id) {
     try {
       if (!category_id || isNaN(category_id)) {
