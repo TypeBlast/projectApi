@@ -13,6 +13,7 @@ const categoriesModule = require('./categories/categories.module');
 const productsModule = require('./products/products.module');
 const appointmentsModule = require('./appointments/appointments.module');
 const cartsModule = require('./carts/carts.module');
+const paymentsModule = require('./payments/payments.module')
 
 router.use('/user', userModule);
 router.use('/auth', authModule);
@@ -26,5 +27,6 @@ router.use('/categories', categoriesModule);
 router.use('/products', productsModule);
 router.use('/appointments', appointmentsModule);
 router.use('/carts', cartsModule);
+router.use('/payments', paymentsModule)
 
 module.exports = router;

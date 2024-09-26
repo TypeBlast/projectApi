@@ -38,17 +38,6 @@ class ProductService {
         ]
       });
   
-      // Mapear os produtos para um array com os dados necessários
-      const productData = products.map(product => ({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        stock: product.stock,
-
-        category: product.categories.name,
-        species: product.species.name,
-        url: product.url
-      }));
   
       return { status: 200, data: products };
     } catch (error) {

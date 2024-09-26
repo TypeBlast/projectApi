@@ -240,18 +240,6 @@ User.hasMany(Payments, {
     as: 'payments' 
 });
 
-Payments.belongsToMany(Cart_items, {
-   through: 'payment_cart_items',
-    foreignKey: 'payment_id',
-     as: 'cart_items' 
-});
-
-Cart_items.belongsToMany(Payments, {
-   through: 'payment_cart_items',
-    foreignKey: 'cart_items_id',
-     as: 'payments'
-});
-
 Payments.belongsTo(Carts, {
    foreignKey: 'cart_id',
     as: 'carts' 

@@ -18,14 +18,6 @@ module.exports = {
           key: 'id'
         }
       },
-      cart_items_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'cart_items',
-          key: 'id'
-        }
-      },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
