@@ -67,6 +67,56 @@ class PaymentService {
     console.log('Pagamento criado com sucesso:', payment);
     return payment; // Retorna os detalhes do pagamento
   }
+
+
+  async getCartSummary(userId, cartId) {
+    console.log(`Obtendo resumo do carrinho para o usuário ID: ${userId}, carrinho ID: ${cartId}`);
+
+    // Verifica se o carrinho existe e pertence ao usuário
+    const cart = await Carts.findOne({ where: { id: cartId, user_id: userId } });
+    if (!cart) {
+        console.error('Carrinho não encontrado', { cartId, userId });
+        throw new Error('Carrinho não encontrado');
+    }
+
+    // Busca os itens do carrinho
+    const cartItems = await CartItems.findAll({
+        where: { cart_id: cartId },
+        include: [{
+            model: Products,
+            as: 'products',
+            attributes: ['id', 'name', 'price'], // Incluindo ID, nome e preço do produto
+        }],
+    });
+
+    // Busca o pagamento relacionado ao carrinho
+    const payment = await Payments.findOne({
+        where: { cart_id: cartId },
+        attributes: ['status', 'payment_date'], // Incluindo status e data do pagamento
+    });
+
+    // Monta o objeto de resumo do carrinho
+    const summary = {
+        cartId,
+        totalItems: cartItems.length, // Contando a quantidade de itens no carrinho
+        items: cartItems.map(item => ({
+            productId: item.products.id,
+            productName: item.products.name,
+            quantity: item.quantity,
+            price: item.products.price,
+            totalItemValue: item.quantity * item.products.price,
+        })),
+        totalValue: cartItems.reduce((acc, item) => acc + (item.quantity * item.products.price), 0), // Calculando o valor total do carrinho
+        paymentStatus: payment ? payment.status : 'Pendente', // Status do pagamento
+        paymentDate: payment ? payment.payment_date : 'Pagamento não concluído', // Data do pagamento
+    };
+
+    console.log('Resumo do carrinho:', summary);
+    
+    return summary;
+}
+
+
 }
 
 module.exports = new PaymentService();

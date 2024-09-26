@@ -13,6 +13,11 @@ const createPet = async (petData, userId) => {
       throw new Error('Nome, idade e espécie são informações obrigatórias.');
     }
 
+    // Validação de idade
+    if (age > 50) {
+      throw new Error('Idade não pode ser maior que 50 anos.');
+    }
+
     if (!['Cachorro', 'Gato'].includes(specie)) {
       throw new Error('Espécie inválida. Deve ser cachorro ou gato.');
     }
@@ -25,13 +30,11 @@ const createPet = async (petData, userId) => {
       throw new Error('O nome do pet não pode conter números.');
     }
 
- 
     const petsCount = await Pets.count({ where: { user_id: userId } });
     if (petsCount >= 15) {
       throw new Error('Você já atingiu o limite de 15 pets cadastrados.');
     }
 
-    
     const existingPet = await Pets.findOne({
       where: { 
         name, 
@@ -95,6 +98,11 @@ const updatePet = async (petId, petData) => {
     }
 
     const { name, age, specie, size } = petData;
+
+    // Validação de idade
+    if (age && age > 50) {
+      throw new Error('Idade não pode ser maior que 50 anos.');
+    }
 
     if (name && !name) throw new Error('Nome inválido.');
     if (age && isNaN(age)) throw new Error('Idade inválida.');

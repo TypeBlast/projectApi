@@ -137,31 +137,7 @@ class CartService {
     }
   }
 
-  async deleteCart(userId) {
-    try {
-      const cart = await Carts.findOne({ where: { user_id: userId } });
-      if (!cart) {
-        throw new Error('Carrinho não encontrado.');
-      }
-
-      const cartItems = await Cart_items.findAll({ where: { cart_id: cart.id } });
-
-      for (const cartItem of cartItems) {
-        const product = await Products.findByPk(cartItem.product_id);
-        if (product) {
-          product.stock += cartItem.quantity;
-          await product.save();
-        }
-      }
-
-      await Cart_items.destroy({ where: { cart_id: cart.id } });
-      await cart.destroy(); 
-
-      return { status: 200, message: 'Carrinho excluído com sucesso.' };
-    } catch (error) {
-      return { status: 400, message: error.message };
-    }
-  }
+  
 
 }
 

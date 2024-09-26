@@ -35,17 +35,6 @@ const clearCartController = async (req, res) => {
   }
 };
 
-const deleteCartController = async (req, res) => {
-    try {
-      const userId = req.userId;
-  
-      const result = await cartService.deleteCart(userId);
-      return res.status(result.status).json({ message: result.message });
-    } catch (error) {
-      return res.status(400).json({ message: 'Erro ao excluir carrinho.' });
-    }
-  };
-
 
 const getCartController = async (req, res) => {
   try {
@@ -63,5 +52,4 @@ module.exports = {
   removeFromCartController,
   clearCartController,
   getCartController,
-  deleteCartController
 };
