@@ -1,4 +1,6 @@
 const Products = require('./Entities/products.entity');
+const Categories = require('../categories/Entities/categories.entity');
+const Species = require('../species/Entities/species.entity');
 const { Op } = require('sequelize');
 
 class ProductService {
@@ -41,17 +43,35 @@ class ProductService {
       if (!productId || isNaN(productId)) {
         throw new Error('ID do produto inválido.');
       }
-
-      const product = await Products.findByPk(productId);
+  
+      const product = await Products.findByPk(productId, {
+        include: [
+          { model: Categories, as: 'categories', attributes: ['name'] },
+          { model: Species, as: 'species', attributes: ['name'] }
+        ]
+      });
+  
       if (!product) {
         return { status: 404, message: 'Produto não encontrado.' };
       }
-
-      return { status: 200, data: product };
+  
+      // Extraindo os dados corretamente para o retorno
+      const productData = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+        category: product.categories.name,
+        species: product.species.name
+      };
+  
+      return { status: 200, data: productData };
     } catch (error) {
       return { status: 400, message: error.message };
     }
   }
+  
+  
 
   async getProductsByCategory(category_id) {
     try {
