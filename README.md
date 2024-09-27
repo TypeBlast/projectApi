@@ -1,7 +1,3 @@
-Aqui está uma versão aprimorada do seu README, considerando os pontos que discutimos e adicionando mais detalhes:
-
----
-
 # PetExpress API 🐾🚀
 
 > Uma API RESTful para gerenciamento de um sistema de pet shop, com foco em operações de CRUD (Criar, Ler, Atualizar e Deletar), gerenciamento de estoque, agendamentos, carrinho de compras e pagamentos. Utilizando Node.js, Sequelize e Express, com a arquitetura modular inspirada no padrão **DRY** ('Don't Repeat Yourself'), semelhante ao framework **NestJS**.
