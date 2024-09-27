@@ -20,7 +20,7 @@
 - **Sequelize**: ORM para modelagem de banco de dados e manipulação de dados.
 - **JWT (JSON Web Tokens)**: Implementação de autenticação e autorização segura.
 - **Firebase**: Login social via Google, integrado à geração de tokens JWT.
-- **MySQL/PostgreSQL**: Banco de dados relacional para armazenamento de informações.
+- **MySQL**: Banco de dados relacional para armazenamento de informações.
 
 ## 🎨 Arquitetura Modular
 
