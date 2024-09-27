@@ -250,6 +250,11 @@ Carts.hasMany(Payments, {
     as: 'payments' 
 });
 
+/* Método de cardinalidade dentro
+ do código para a relação de tabelas
+onde hasMany significa 'Tem muitos' 
+enquanto belongsTo significa 'Pertence' */
+
 
 
 sequelize.sync()

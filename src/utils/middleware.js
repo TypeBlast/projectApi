@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const authenticate = (req, res, next) => {
-  console.log('Cabeçalhos recebidos:', req.headers);
 
   const authHeader = req.headers.authorization;
   let token = null;
@@ -20,8 +19,6 @@ const authenticate = (req, res, next) => {
     return res.status(401).json({ message: 'Token não fornecido.' });
   }
 
-  console.log('Token recebido:', token); 
-
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       console.error('Erro na verificação do token:', err); 
@@ -34,3 +31,8 @@ const authenticate = (req, res, next) => {
 };
 
 module.exports = authenticate;
+
+
+/* Criação do Middleware de autenticação que será usado para
+ proteger alguns métodos de endpoints que necessitam do ID 
+do usuário em questão */

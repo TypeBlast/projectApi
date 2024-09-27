@@ -11,7 +11,6 @@ const login = async (email, password) => {
 
         const token = generateToken(user);
 
-        // Inclua as informações do usuário na resposta
         return {
             status: 201,
             message: 'Login bem-sucedido',
@@ -33,25 +32,23 @@ const login = async (email, password) => {
     }
 };
 
-// Nova função para login com Google
+
 const googleLogin = async (email) => {
     try {
-        // Verifica se o usuário já existe
+
         let user = await User.findOne({ where: { email } });
 
         if (!user) {
-            // Se não existir, cria um novo usuário com dados padrão
+
             user = await User.create({
                 email,
-                name: 'Nome padrão', // Substitua por um valor adequado, se necessário
-                // Adicione outros campos necessários aqui, como cpf, phone, etc.
+                name: 'Nome padrão', 
+                
             });
         }
-
-        // Gera o token
+ 
         const token = generateToken(user);
 
-        // Retorna o resultado
         return {
             status: 200,
             message: 'Login com Google bem-sucedido',

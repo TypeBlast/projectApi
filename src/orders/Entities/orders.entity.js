@@ -31,7 +31,7 @@ class Orders extends Sequelize.Model {
         allowNull: false
       },
       status: {
-        type: Sequelize.ENUM('Pendente', 'Processando', 'Enviado', 'Entregue', 'Cancelado'),
+        type: Sequelize.ENUM('Processando', 'Entregue', 'Cancelado'),
         allowNull: false,
         defaultValue: 'Pendente'
       }

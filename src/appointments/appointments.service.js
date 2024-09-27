@@ -13,22 +13,22 @@ const createAppointment = async (appointmentData, userId) => {
       throw new Error('Todos os campos são obrigatórios.');
     }
 
-    // Convertendo appointment_date e appointment_time para objetos Date
+   
     const currentDateTime = new Date();
     const appointmentDateTime = new Date(`${appointment_date}T${appointment_time}`);
 
-    // Validação para não agendar em dias anteriores ao atual
+    
     if (appointmentDateTime < currentDateTime) {
       throw new Error('Não é possível agendar em uma data anterior à atual.');
     }
 
-    // Validação de horário comercial (08:00-18:00)
+    
     const appointmentHour = appointmentDateTime.getHours();
     if (appointmentHour < 8 || appointmentHour >= 18) {
       throw new Error('O horário de agendamento deve estar entre 08:00 e 18:00.');
     }
 
-    // Verificação de conflito de agendamento no mesmo dia e horário para qualquer usuário
+    
     const existingAppointment = await Appointments.findOne({
       where: {
         appointment_date,

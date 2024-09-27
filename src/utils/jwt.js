@@ -15,3 +15,7 @@ const verifyToken = (token) => {
 };
 
 module.exports = { generateToken, verifyToken };
+
+/* Token responsável por armazenar dados
+ do usuário que serão descriptografados
+  dentro do front-end */
