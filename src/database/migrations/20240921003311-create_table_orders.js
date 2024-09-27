@@ -46,7 +46,7 @@ module.exports = {
       status: {
         type: Sequelize.ENUM('Processando', 'Entregue', 'Cancelado'),
         allowNull: false,
-        defaultValue: 'Pendente'
+        defaultValue: 'Processando'
       }
     });
   },
