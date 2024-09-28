@@ -23,6 +23,11 @@ class ProductController {
     const result = await productService.getProductsByCategory(category_id);
     return res.status(result.status).json({ message: result.message, data: result.data });
   }
+  async getProductsBySpecie(req, res) {
+    const { specie_id } = req.params;  
+    const result = await productService.getProductsBySpecie(specie_id);
+    return res.status(result.status).json({ message: result.message, data: result.data });
+  }
   async getProductsByName(req, res) {
     const { name } = req.params; 
     const result = await productService.getProductsByName(name);

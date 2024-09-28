@@ -6,6 +6,7 @@ router.post('/', productController.createProduct);
 router.get('/', productController.getAllProducts);
 router.get('/:id', productController.getProductById);
 router.get('/category/:category_id', productController.getProductsByCategory);
+router.get('/specie/:specie_id', productController.getProductsBySpecie);
 router.get('/search/:name', productController.getProductsByName);
 router.get('/filter/:category_id/:species_id', productController.getFilteredProducts);
 router.put('/:id', productController.updateProduct);

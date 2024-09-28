@@ -89,6 +89,26 @@ class ProductService {
     }
   }
 
+  async getProductsBySpecie(species_id) {
+    try {
+      if (!species_id || isNaN(species_id)) {
+        throw new Error('ID da espécie inválido.');
+      }
+
+      const products = await Products.findAll({
+        where: { species_id }
+      });
+
+      if (!products.length) {
+        return { status: 404, message: 'Nenhum produto encontrado para esta espécie.' };
+      }
+
+      return { status: 200, data: products };
+    } catch (error) {
+      return { status: 400, message: error.message };
+    }
+  }
+
   async getProductsByName(name) {
     try {
       if (!name || typeof name !== 'string') {
