@@ -154,6 +154,14 @@ A PetExpress API adota uma arquitetura modular seguindo o padrão **DRY**, inspi
         </sub>
       </a>
     </td>
+    <td align="center">
+      <a href="https://github.com/isadorachieregato">
+        <img src="https://avatars.githubusercontent.com/u/162230662?v=4" width="100px;" alt="Foto do Victor Santucci no GitHub"/><br>
+        <sub>
+          <b>Isadora Chieregato</b>
+        </sub>
+      </a>
+    </td>
   </tr>
 </table>
 
