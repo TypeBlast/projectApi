@@ -38,7 +38,7 @@ class Addresses extends Sequelize.Model {
           notEmpty: true, 
           is: {
             args: /^[0-9]+$/, 
-            msg: ' O CEP deve conter apenas números.'
+            msg: 'O CEP deve conter apenas números.'
           },
           len: [8, 10] 
         }
@@ -48,6 +48,14 @@ class Addresses extends Sequelize.Model {
         allowNull: false,
         references: {
           model: 'cities',
+          key: 'id'
+        }
+      },
+      state_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'states',
           key: 'id'
         }
       }

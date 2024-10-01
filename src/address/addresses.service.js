@@ -7,17 +7,17 @@ const createAddress = async (addressData, userId) => {
       throw new Error('Dados de endereço inválidos.');
     }
 
-    const { number, cep, city_id } = addressData;
+    const { number, cep, city_id, state_id } = addressData;
 
-    if (!number || !cep || !city_id) {
-      throw new Error('Número, CEP e a cidade são informações obrigatórias.');
+    if (!number || !cep || !city_id || !state_id) {
+      throw new Error('Número, CEP, cidade e estado são informações obrigatórias.');
     }
 
     if (!/^[0-9]{8,10}$/.test(cep)) {
       throw new Error('O CEP deve conter apenas números e ter entre 8 a 10 dígitos.');
     }
 
-    
+
     const existingAddresses = await Addresses.findAll({
       where: { user_id: userId },
     });
@@ -26,13 +26,13 @@ const createAddress = async (addressData, userId) => {
       return { status: 400, message: 'Você só pode criar até 3 endereços.' };
     }
 
-    
     const duplicateAddress = await Addresses.findOne({
       where: { 
         user_id: userId, 
-        number: number, 
-        cep: cep, 
-        city_id: city_id 
+        number, 
+        cep, 
+        city_id,
+        state_id 
       },
     });
 
@@ -45,7 +45,7 @@ const createAddress = async (addressData, userId) => {
       user_id: userId
     });
 
-    return { status: 201, message: 'Endereço criado com sucesso.' };
+    return { status: 201, message: 'Endereço criado com sucesso.', data: address };
 
   } catch (e) {
     return { status: 400, message: e.message };
@@ -91,7 +91,7 @@ const updateAddress = async (addressId, addressData) => {
 
     await address.update(addressData);
 
-    return { status: 200, message: 'Endereço atualizado com sucesso.' };
+    return { status: 200, message: 'Endereço atualizado com sucesso.', data: address };
   } catch (e) {
     return { status: 400, message: e.message };
   }

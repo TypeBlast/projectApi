@@ -8,7 +8,7 @@ const createAddressController = async (req, res) => {
     const result = await addressesService.createAddress(addressData, userId);
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
-    return res.status(400).json({ message: 'Erro ao criar endereço.' });
+    return res.status(error.status || 400).json({ message: error.message || 'Erro ao criar endereço.' });
   }
 };
 
@@ -17,7 +17,7 @@ const getAllAddressesController = async (req, res) => {
     const result = await addressesService.getAllAddresses();
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
-    return res.status(400).json({ message: 'Erro ao buscar todos os endereços.' });
+    return res.status(error.status || 400).json({ message: error.message || 'Erro ao buscar todos os endereços.' });
   }
 };
 
@@ -27,7 +27,7 @@ const getAddressByIdController = async (req, res) => {
     const result = await addressesService.getAddressById(addressId);
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
-    return res.status(400).json({ message: 'Erro ao buscar endereço.' });
+    return res.status(error.status || 400).json({ message: error.message || 'Erro ao buscar endereço.' });
   }
 };
 
@@ -38,7 +38,7 @@ const updateAddressController = async (req, res) => {
     const result = await addressesService.updateAddress(addressId, addressData);
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
-    return res.status(400).json({ message: 'Erro ao atualizar endereço.' });
+    return res.status(error.status || 400).json({ message: error.message || 'Erro ao atualizar endereço.' });
   }
 };
 
@@ -48,7 +48,7 @@ const deleteAddressController = async (req, res) => {
     const result = await addressesService.deleteAddress(addressId);
     return res.status(result.status).json({ message: result.message });
   } catch (error) {
-    return res.status(400).json({ message: 'Erro ao excluir endereço.' });
+    return res.status(error.status || 400).json({ message: error.message || 'Erro ao excluir endereço.' });
   }
 };
 

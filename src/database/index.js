@@ -250,6 +250,13 @@ Carts.hasMany(Payments, {
     as: 'payments' 
 });
 
+Addresses.belongsTo(States, {
+   foreignKey: 'state_id' });
+
+States.hasMany(Addresses, {
+   foreignKey: 'state_id' });
+
+
 /* Método de cardinalidade dentro
  do código para a relação de tabelas
 onde hasMany significa 'Tem muitos' 
