@@ -74,15 +74,19 @@ class ProductService {
       if (!category_id || isNaN(category_id)) {
         throw new Error('ID da categoria inválido.');
       }
-
+  
       const products = await Products.findAll({
-        where: { category_id }
+        where: { category_id },
+        include: [
+          { model: Categories, as: 'categories', attributes: ['name'] },
+          { model: Species, as: 'species', attributes: ['name'] }
+        ]
       });
-
+  
       if (!products.length) {
         return { status: 404, message: 'Nenhum produto encontrado para esta categoria.' };
       }
-
+  
       return { status: 200, data: products };
     } catch (error) {
       return { status: 400, message: error.message };
@@ -94,33 +98,41 @@ class ProductService {
       if (!species_id || isNaN(species_id)) {
         throw new Error('ID da espécie inválido.');
       }
-
+  
       const products = await Products.findAll({
-        where: { species_id }
+        where: { species_id },
+        include: [
+          { model: Categories, as: 'categories', attributes: ['name'] },
+          { model: Species, as: 'species', attributes: ['name'] }
+        ]
       });
-
+  
       if (!products.length) {
         return { status: 404, message: 'Nenhum produto encontrado para esta espécie.' };
       }
-
+  
       return { status: 200, data: products };
     } catch (error) {
       return { status: 400, message: error.message };
     }
-  }
+  }   
 
   async getProductsByName(name) {
     try {
       if (!name || typeof name !== 'string') {
         return { status: 400, message: 'Nome do produto inválido.', data: null };
       }
-      
+  
       const products = await Products.findAll({
         where: {
           name: {
-            [Op.like]: `%${name}%` 
+            [Op.like]: `%${name}%`
           }
-        }
+        },
+        include: [
+          { model: Categories, as: 'categories', attributes: ['name'] },
+          { model: Species, as: 'species', attributes: ['name'] }
+        ]
       });
   
       if (products.length === 0) {
@@ -132,7 +144,6 @@ class ProductService {
       return { status: 500, message: error.message, data: null };
     }
   }
-
 
   async getFilteredProducts(category_id, species_id, order) {
     try {
