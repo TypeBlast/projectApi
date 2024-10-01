@@ -251,10 +251,14 @@ Carts.hasMany(Payments, {
 });
 
 Addresses.belongsTo(States, {
-   foreignKey: 'state_id' });
+   foreignKey: 'state_id',
+   as: 'states'
+});
 
 States.hasMany(Addresses, {
-   foreignKey: 'state_id' });
+   foreignKey: 'state_id',
+   as: 'addresses'
+});
 
 
 /* Método de cardinalidade dentro

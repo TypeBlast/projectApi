@@ -1,5 +1,5 @@
 const { Carts, Cart_items, Products } = require('../database/index');
-const { Op } = require('sequelize');  // Adicionar importação do operador Sequelize
+const { Op } = require('sequelize');  
 
 class CartService {
 
@@ -70,11 +70,11 @@ class CartService {
         throw new Error('Produto não encontrado.');
       }
 
-      // Repor a quantidade de produtos no estoque
+      
       product.stock += quantity;
       await product.save();
 
-      // Se a quantidade no carrinho for igual ou menor ao removido, remover o item completamente
+    
       if (cartItem.quantity <= quantity) {
         await cartItem.destroy();
       } else {
@@ -119,7 +119,7 @@ class CartService {
         throw new Error('Carrinho não encontrado.');
       }
 
-      // Filtro para retornar apenas os itens com quantidade > 0
+      
       const cartItems = await Cart_items.findAll({ where: { cart_id: cart.id, quantity: { [Op.gt]: 0 } } });
       
       const itemsWithDetails = await Promise.all(cartItems.map(async (item) => {
