@@ -1,5 +1,6 @@
 const { ValidationError } = require('sequelize');
 const Addresses = require('./Entities/addresses.entity');
+const Cities = require('../city/Entities/cities.entity');
 
 const createAddress = async (addressData, userId) => {
   try {
@@ -17,6 +18,14 @@ const createAddress = async (addressData, userId) => {
       throw new Error('O CEP deve conter apenas números e ter entre 8 a 10 dígitos.');
     }
 
+    
+    const city = await Cities.findByPk(city_id);
+    if (!city) {
+      throw new Error('Cidade não encontrada.');
+    }
+    if (city.state_id !== state_id) {
+      throw new Error('A cidade fornecida não pertence ao estado especificado.');
+    }
 
     const existingAddresses = await Addresses.findAll({
       where: { user_id: userId },
@@ -87,6 +96,19 @@ const updateAddress = async (addressId, addressData) => {
     const address = await Addresses.findByPk(addressId);
     if (!address) {
       return { status: 404, message: 'Endereço não encontrado.' };
+    }
+
+    const { city_id, state_id } = addressData;
+
+    if (city_id && state_id) {
+    
+      const city = await Cities.findByPk(city_id);
+      if (!city) {
+        throw new Error('Cidade não encontrada.');
+      }
+      if (city.state_id !== state_id) {
+        throw new Error('A cidade fornecida não pertence ao estado especificado.');
+      }
     }
 
     await address.update(addressData);
