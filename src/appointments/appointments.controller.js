@@ -13,19 +13,23 @@ const createAppointmentController = async (req, res) => {
   }
 };
 
-const getAllAppointmentsController = async (req, res) => {
+const getUserAppointmentsController = async (req, res) => {
   try {
-    const result = await appointmentsService.getAllAppointments();
+    const userId = req.userId; 
+    const result = await appointmentsService.getUserAppointments(userId);
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
     return res.status(error.status || 500).json({ message: error.message });
   }
 };
 
-const getAppointmentByIdController = async (req, res) => {
+const getAppointmentByIdAndUserIdController = async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await appointmentsService.getAppointmentById(id);
+    const { id } = req.params; 
+    const userId = req.userId; 
+
+    const result = await appointmentsService.getAppointmentByIdAndUserId(id, userId);
+
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
     return res.status(error.status || 500).json({ message: error.message });
@@ -55,8 +59,8 @@ const deleteAppointmentController = async (req, res) => {
 
 module.exports = {
   createAppointmentController,
-  getAllAppointmentsController,
-  getAppointmentByIdController,
+  getUserAppointmentsController,
+  getAppointmentByIdAndUserIdController,
   updateAppointmentController,
   deleteAppointmentController
 };

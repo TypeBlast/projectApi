@@ -3,16 +3,16 @@ const authenticate = require('../utils/middleware');
 
 const {
   createPetController,
-  getAllPetsController,
-  getPetByIdController,
+  getPetByIdAndUserIdController,
   updatePetController,
-  deletePetController
+  deletePetController,
+  getPetsByUserIdController
 } = require('./pets.controller');
 
 
 router.post('/', authenticate, createPetController);
-router.get('/', authenticate, getAllPetsController);
-router.get('/:id', authenticate, getPetByIdController);
+router.get('/', authenticate, getPetsByUserIdController); 
+router.get('/:id', authenticate, getPetByIdAndUserIdController);
 router.put('/:id', authenticate, updatePetController);
 router.delete('/:id', authenticate, deletePetController);
 

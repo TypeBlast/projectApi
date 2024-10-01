@@ -60,24 +60,26 @@ const createPet = async (petData, userId) => {
   }
 };
 
-const getAllPets = async () => {
-  try {
-    const pets = await Pets.findAll();
-    return { status: 200, data: pets };
-  } catch (e) {
-    return { status: 400, message: e.message };
-  }
-};
 
-const getPetById = async (petId) => {
+const getPetByIdAndUserId = async (petId, userId) => {
   try {
     if (!petId || isNaN(petId)) {
       throw new Error('ID do pet inválido.');
     }
+    
+    if (!userId || isNaN(userId)) {
+      throw new Error('ID do usuário inválido.');
+    }
 
-    const pet = await Pets.findByPk(petId);
+    const pet = await Pets.findOne({
+      where: {
+        id: petId,
+        user_id: userId
+      }
+    });
+
     if (!pet) {
-      return { status: 404, message: 'Pet não encontrado.' };
+      return { status: 404, message: 'Pet não encontrado para este usuário.' };
     }
 
     return { status: 200, data: pet };
@@ -85,6 +87,7 @@ const getPetById = async (petId) => {
     return { status: 400, message: e.message };
   }
 };
+
 
 const updatePet = async (petId, petData) => {
   try {
@@ -136,10 +139,31 @@ const deletePet = async (petId) => {
   }
 };
 
+const getPetsByUserId = async (userId) => {
+  try {
+    if (!userId || isNaN(userId)) {
+      throw new Error('ID do usuário inválido.');
+    }
+
+    const pets = await Pets.findAll({
+      where: { user_id: userId }
+    });
+
+    if (pets.length === 0) {
+      return { status: 404, message: 'Nenhum pet encontrado para este usuário.' };
+    }
+
+    return { status: 200, data: pets };
+  } catch (e) {
+    return { status: 400, message: e.message };
+  }
+};
+
+
 module.exports = {
   createPet,
-  getAllPets,
-  getPetById,
+  getPetByIdAndUserId,
   updatePet,
-  deletePet
+  deletePet,
+  getPetsByUserId
 };

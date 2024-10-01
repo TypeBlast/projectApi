@@ -3,9 +3,11 @@ const OrderService = require('./orders.service');
 class OrderController {
   async getOrderByPaymentId(req, res) {
     const { paymentId } = req.params;
+    const userId = req.userId; 
 
     try {
-      const orderDetails = await OrderService.getOrderByPaymentId(paymentId);
+      
+      const orderDetails = await OrderService.getOrderByPaymentId(paymentId, userId);
       return res.status(200).json({
         status: 200,
         message: 'Pedido obtido com sucesso',

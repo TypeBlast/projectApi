@@ -6,13 +6,18 @@ const Products = require('../products/Entities/products.entity');
 const Cities = require('../city/Entities/cities.entity');
 
 class OrderService {
-  async getOrderByPaymentId(paymentId) {
+  async getOrderByPaymentId(paymentId, userId) {
     if (!paymentId) {
       throw new Error('ID do pagamento é obrigatório');
     }
 
+    if (!userId) {
+      throw new Error('ID do usuário é obrigatório');
+    }
+
+    // Verifica se o pedido pertence ao usuário autenticado
     const order = await Orders.findOne({
-      where: { payment_id: paymentId },
+      where: { payment_id: paymentId, user_id: userId }, // Verificação do userId aqui
       include: [
         {
           model: Payments,
@@ -46,7 +51,7 @@ class OrderService {
     });
 
     if (!order) {
-      throw new Error('Pedido não encontrado para o ID de pagamento fornecido');
+      throw new Error('Pedido não encontrado para o ID de pagamento e usuário fornecido');
     }
 
     const payments = order.payments || {};
@@ -54,31 +59,37 @@ class OrderService {
       ? order.order_items.reduce((acc, item) => acc + item.quantity, 0)
       : 0;
 
+    const totalValue = order.order_items
+      ? order.order_items.reduce((acc, item) => acc + (item.products.price * item.quantity), 0)
+      : 0;
+
     const formatBrazilianDate = (date) => {
       return date ? new Date(date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : 'Data não disponível';
     };
 
     const orderDetails = {
-      totalValue: order.total_value,
+      totalValue: totalValue,
+      totalQuantity: totalQuantity,
       orderDate: formatBrazilianDate(order.order_date),
       status: order.status,
       paymentMethod: payments.payment_method || 'Método de pagamento não disponível',
       paymentStatus: payments.status || 'Status não disponível',
       paymentDate: formatBrazilianDate(payments.payment_date),
-      addresses: {
-        complement: order.addresses.complement,
-        number: order.addresses.number,
-        cep: order.addresses.cep,
-        city: order.addresses.cities.name,
-      },
+      addresses: order.addresses
+        ? {
+            complement: order.addresses.complement,
+            number: order.addresses.number,
+            cep: order.addresses.cep,
+            city: order.addresses.cities.name,
+          }
+        : 'Endereço não disponível',
       items: order.order_items
         ? order.order_items.map(item => ({
             productName: item.products.name,
             quantity: item.quantity,
-            price: item.price,
+            price: item.products.price,
           }))
         : [],
-      totalQuantity,
     };
 
     return orderDetails;

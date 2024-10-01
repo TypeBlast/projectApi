@@ -61,24 +61,26 @@ const createAddress = async (addressData, userId) => {
   }
 };
 
-const getAllAddresses = async () => {
-  try {
-    const addresses = await Addresses.findAll();
-    return { status: 200, data: addresses };
-  } catch (e) {
-    return { status: 400, message: e.message };
-  }
-};
 
-const getAddressById = async (addressId) => {
+const getAddressByIdAndUserId = async (addressId, userId) => {
   try {
     if (!addressId || isNaN(addressId)) {
       throw new Error('ID de endereço inválido.');
     }
 
-    const address = await Addresses.findByPk(addressId);
+    if (!userId || isNaN(userId)) {
+      throw new Error('ID de usuário inválido.');
+    }
+
+    const address = await Addresses.findOne({
+      where: {
+        id: addressId,
+        user_id: userId
+      }
+    });
+
     if (!address) {
-      return { status: 404, message: 'Endereço não encontrado.' };
+      return { status: 404, message: 'Endereço não encontrado para este usuário.' };
     }
 
     return { status: 200, data: address };
@@ -86,6 +88,8 @@ const getAddressById = async (addressId) => {
     return { status: 400, message: e.message };
   }
 };
+
+
 
 const updateAddress = async (addressId, addressData) => {
   try {
@@ -138,10 +142,22 @@ const deleteAddress = async (addressId) => {
   }
 };
 
+const getAddressesByUserId = async (userId) => {
+  try {
+    const addresses = await Addresses.findAll({
+      where: { user_id: userId },
+    });
+
+    return { status: 200, data: addresses };
+  } catch (e) {
+    return { status: 400, message: 'Não existe nenhum endereço para este usuário.' };
+  }
+};
+
 module.exports = {
   createAddress,
-  getAllAddresses,
-  getAddressById,
+  getAddressesByUserId,
   updateAddress,
-  deleteAddress
+  deleteAddress,
+  getAddressByIdAndUserId
 };

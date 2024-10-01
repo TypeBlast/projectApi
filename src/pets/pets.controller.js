@@ -13,19 +13,14 @@ const createPetController = async (req, res) => {
   }
 };
 
-const getAllPetsController = async (req, res) => {
-  try {
-    const result = await petsService.getAllPets();
-    return res.status(result.status).json({ message: result.message, data: result.data });
-  } catch (error) {
-    return res.status(error.status || 500).json({ message: error.message });
-  }
-};
 
-const getPetByIdController = async (req, res) => {
+const getPetByIdAndUserIdController = async (req, res) => {
   try {
-    const petId = req.params.id;
-    const result = await petsService.getPetById(petId);
+    const { id } = req.params; 
+    const userId = req.userId; 
+
+    const result = await petsService.getPetByIdAndUserId(id, userId);
+
     return res.status(result.status).json({ message: result.message, data: result.data });
   } catch (error) {
     return res.status(error.status || 500).json({ message: error.message });
@@ -53,10 +48,23 @@ const deletePetController = async (req, res) => {
   }
 };
 
+const getPetsByUserIdController = async (req, res) => {
+  try {
+    const userId = req.userId; 
+    const result = await petsService.getPetsByUserId(userId);
+
+    return res.status(result.status).json({ message: result.message, data: result.data });
+  } catch (error) {
+    return res.status(error.status || 500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createPetController,
-  getAllPetsController,
-  getPetByIdController,
+  getPetByIdAndUserIdController,
   updatePetController,
-  deletePetController
+  deletePetController,
+  getPetsByUserIdController 
 };
+
+

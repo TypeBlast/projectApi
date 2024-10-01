@@ -54,24 +54,36 @@ const createAppointment = async (appointmentData, userId) => {
   }
 };
 
-const getAllAppointments = async () => {
+const getUserAppointments = async (userId) => {
   try {
-    const appointments = await Appointments.findAll();
+    const appointments = await Appointments.findAll({
+      where: { user_id: userId },
+    });
     return { status: 200, data: appointments };
   } catch (e) {
     return { status: 400, message: e.message };
   }
 };
 
-const getAppointmentById = async (appointmentId) => {
+const getAppointmentByIdAndUserId = async (appointmentId, userId) => {
   try {
     if (!appointmentId || isNaN(appointmentId)) {
       throw new Error('ID do agendamento inválido.');
     }
+    
+    if (!userId || isNaN(userId)) {
+      throw new Error('ID do usuário inválido.');
+    }
 
-    const appointment = await Appointments.findByPk(appointmentId);
+    const appointment = await Appointments.findOne({
+      where: {
+        id: appointmentId,
+        user_id: userId
+      }
+    });
+
     if (!appointment) {
-      return { status: 404, message: 'Agendamento não encontrado.' };
+      return { status: 404, message: 'Agendamento não encontrado para este usuário.' };
     }
 
     return { status: 200, data: appointment };
@@ -128,8 +140,8 @@ const deleteAppointment = async (appointmentId) => {
 
 module.exports = {
   createAppointment,
-  getAllAppointments,
-  getAppointmentById,
+  getUserAppointments,
+  getAppointmentByIdAndUserId,
   updateAppointment,
   deleteAppointment
 };
