@@ -20,7 +20,8 @@ const login = async (email, password) => {
                 name: user.name,
                 email: user.email,
                 cpf: user.cpf,
-                phone: user.phone
+                phone: user.phone,
+                role: user.role
             }
         };
 
@@ -46,7 +47,7 @@ const googleLogin = async (email) => {
                 
             });
         }
- 
+
         const token = generateToken(user);
 
         return {
@@ -58,7 +59,8 @@ const googleLogin = async (email) => {
                 name: user.name,
                 email: user.email,
                 cpf: user.cpf,
-                phone: user.phone
+                phone: user.phone,
+                role: user.role
             }
         };
     } catch (e) {
