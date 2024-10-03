@@ -17,7 +17,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
       interval: 10s
       retries: 5
-      start_period: 30s
+      start_period: 60s
       timeout: 5s
 
   api:
@@ -38,7 +38,7 @@ services:
         condition: service_healthy
     networks:
       - app-network
-    entrypoint: ["sh", "-c", "npx sequelize db:migrate && npm start"]
+    entrypoint: ["sh", "-c", "sleep 20 && npx sequelize db:migrate && npm start"]
 
 networks:
   app-network:
