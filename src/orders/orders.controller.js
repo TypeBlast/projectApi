@@ -76,6 +76,19 @@ class OrderController {
     }
   }
 
+  async getAllOrdersForAllUsers(req, res) {
+    try {
+      const orders = await OrderService.getAllOrdersForAllUsers();
+      return res.status(200).json({
+        status: 200,
+        message: 'Todos os pedidos obtidos com sucesso',
+        data: orders,
+      });
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+
 }
 
 module.exports = new OrderController();

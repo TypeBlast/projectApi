@@ -8,6 +8,7 @@ router.delete('/:orderId', authenticate, OrderController.deleteOrder);
 router.delete('/cancel/:orderId', authenticate, OrderController.cancelOrder);
 router.put('/:orderId', authenticate, OrderController.markOrderAsDelivered);
 router.get('/', authenticate, OrderController.getAllOrders);
+router.get('/all/users',  OrderController.getAllOrdersForAllUsers);
 
 
 module.exports = router;
