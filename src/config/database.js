@@ -3,11 +3,10 @@ require('dotenv').config();
 module.exports = {
     development: {
         dialect: 'mysql',
-        host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT,
-        username: process.env.DATABASE_USERNAME,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE,
+        host: process.env.DB_HOST,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         define: {
             timestamps: false,
             underscored: true,
@@ -16,9 +15,11 @@ module.exports = {
             updatedAt: 'updated_at'
         },
         dialectOptions: {
+            ssl: {
+                ca: fs.readFileSync(__dirname + '/path/to/DigiCertGlobalRootCA.crt.pem') // Certifique-se de fornecer o caminho correto
+            },
             timezone: 'local',
         },
         timezone: 'America/Sao_Paulo'
     }   
-
 };
