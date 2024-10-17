@@ -1,21 +1,7 @@
 const { Sequelize } = require('sequelize');
-const databaseConfig = require('../config/database');
+const config = require('../config/database');
 
-const env = process.env.NODE_ENV || 'development';
-const config = databaseConfig[env];
-
-const sequelize = new Sequelize(
-   config.database,
-   config.username,
-   config.password,
-   {
-      host: config.host,
-      dialect: config.dialect,
-      define: config.define,
-      dialectOptions: config.dialectOptions,
-      timezone: config.timezone,
-   }
-);
+const sequelize = new Sequelize(config);
 
 const User = require('../user/Entities/user.entity');
 const States = require('../state/Entities/states.entity');
@@ -54,212 +40,211 @@ Order_items.init(sequelize);
 
 
 States.hasMany(Cities, {
-   foreignKey: 'state_id',
-   as: 'cities'
+  foreignKey: 'state_id',
+  as: 'cities'
 });
 
 Cities.belongsTo(States, {
-   foreignKey: 'state_id',
-   as: 'states'
+  foreignKey: 'state_id',
+  as: 'states'
 });
 
 Cities.hasMany(Addresses, {
-   foreignKey: 'city_id',
-   as: 'addresses'
+  foreignKey: 'city_id',
+  as: 'addresses'
 });
 
 Addresses.belongsTo(Cities, {
-   foreignKey: 'city_id',
-   as: 'cities'
+  foreignKey: 'city_id',
+  as: 'cities'
 });
 
 User.hasMany(Addresses, {
-   foreignKey: 'user_id',
-   as: 'addresses'
+  foreignKey: 'user_id',
+  as: 'addresses'
 });
 
 Addresses.belongsTo(User, {
-   foreignKey: 'user_id',
-   as: 'users'
+  foreignKey: 'user_id',
+  as: 'users'
 });
 
 Products.belongsTo(Categories, {
    foreignKey: 'category_id',
-   as: 'categories'
+    as: 'categories'
 });
 
 Products.belongsTo(Species, {
    foreignKey: 'species_id',
-   as: 'species'
+    as: 'species'
 });
 
 Categories.hasMany(Products, {
    foreignKey: 'category_id',
-   as: 'products'
+    as: 'products'
 });
 
 Species.hasMany(Products, {
    foreignKey: 'species_id',
-   as: 'products'
+    as: 'products' 
 });
 
 User.hasMany(Appointments, {
-   foreignKey: 'user_id',
-   as: 'appointments'
+    foreignKey: 'user_id',
+     as: 'appointments' 
 });
 
 Services.hasMany(Appointments, {
-   foreignKey: 'service_id',
-   as: 'appointments'
+    foreignKey: 'service_id',
+     as: 'appointments' 
 });
 
 Employer.hasMany(Appointments, {
-   foreignKey: 'employer_id',
-   as: 'appointments'
+    foreignKey: 'employer_id',
+     as: 'appointments' 
 });
 
 Pets.hasMany(Appointments, {
-   foreignKey: 'pet_id',
-   as: 'appointments'
+    foreignKey: 'pet_id',
+     as: 'appointments' 
 });
 
-Appointments.belongsTo(User,
-   {
-      foreignKey: 'user_id',
-      as: 'users'
-   });
+Appointments.belongsTo(User, 
+  { foreignKey: 'user_id',
+     as: 'users' 
+});
 
 Appointments.belongsTo(Services, {
    foreignKey: 'service_id',
-   as: 'services'
+    as: 'services' 
 });
 
 Appointments.belongsTo(Employer, {
    foreignKey: 'employer_id',
-   as: 'employers'
+    as: 'employers' 
 });
 
 Appointments.belongsTo(Pets, {
    foreignKey: 'pet_id',
-   as: 'pets'
+    as: 'pets' 
 });
 
 Pets.belongsTo(User, {
    foreignKey: 'user_id',
-   as: 'users'
+    as: 'users' 
 });
 
 User.hasMany(Pets, {
    foreignKey: 'user_id',
-   as: 'pets'
+    as: 'pets' 
 });
 
 User.hasMany(Carts, {
    foreignKey: 'user_id',
-   as: 'carts'
+    as: 'carts' 
 });
 
 Carts.belongsTo(User, {
    foreignKey: 'user_id',
-   as: 'users'
+    as: 'users' 
 });
 
 Carts.hasMany(Cart_items, {
    foreignKey: 'cart_id',
-   as: 'cart_items'
+    as: 'cart_items' 
 });
 
 Cart_items.belongsTo(Carts, {
    foreignKey: 'cart_id',
-   as: 'carts'
+    as: 'carts' 
 });
 
 Products.hasMany(Cart_items, {
    foreignKey: 'product_id',
-   as: 'cart_items'
+    as: 'cart_items' 
 });
 
 Cart_items.belongsTo(Products, {
    foreignKey: 'product_id',
-   as: 'products'
+    as: 'products' 
 });
 
 Services.hasMany(Employer, {
-   foreignKey: 'serviceId',
+  foreignKey: 'serviceId',
 });
 
 Employer.belongsTo(Services, {
-   foreignKey: 'serviceId',
+  foreignKey: 'serviceId',
 });
 
 Orders.belongsTo(User, {
    foreignKey: 'user_id',
-   as: 'users'
+    as: 'users' 
 });
 
 User.hasMany(Orders, {
    foreignKey: 'user_id',
-   as: 'orders'
+    as: 'orders' 
 });
 
 Orders.belongsTo(Payments, {
    foreignKey: 'payment_id',
-   as: 'payments'
+    as: 'payments' 
 });
 
 Payments.hasOne(Orders, {
    foreignKey: 'payment_id',
-   as: 'orders'
+    as: 'orders' 
 });
 
 Orders.belongsTo(Addresses, {
    foreignKey: 'address_id',
-   as: 'addresses'
+    as: 'addresses' 
 });
 
 Addresses.hasMany(Orders, {
    foreignKey: 'address_id',
-   as: 'orders'
+    as: 'orders' 
 });
 
 Order_items.belongsTo(Orders, {
    foreignKey: 'order_id',
-   as: 'orders'
+    as: 'orders' 
 });
 
 Orders.hasMany(Order_items, {
    foreignKey: 'order_id',
-   as: 'order_items'
+    as: 'order_items' 
 });
 
 Order_items.belongsTo(Products, {
    foreignKey: 'product_id',
-   as: 'products'
+    as: 'products' 
 });
 
 Products.hasMany(Order_items, {
    foreignKey: 'product_id',
-   as: 'order_items'
+    as: 'order_items' 
 });
 
 Payments.belongsTo(User, {
    foreignKey: 'user_id',
-   as: 'users'
+    as: 'users' 
 });
 
 User.hasMany(Payments, {
    foreignKey: 'user_id',
-   as: 'payments'
+    as: 'payments' 
 });
 
 Payments.belongsTo(Carts, {
    foreignKey: 'cart_id',
-   as: 'carts'
+    as: 'carts' 
 });
 
 Carts.hasMany(Payments, {
    foreignKey: 'cart_id',
-   as: 'payments'
+    as: 'payments' 
 });
 
 Addresses.belongsTo(States, {
@@ -281,25 +266,25 @@ enquanto belongsTo significa 'Pertence' */
 
 
 sequelize.sync()
-   .then(() => console.log('Banco de dados sincronizado.'))
-   .catch(error => console.error('Erro ao sincronizar o banco de dados:', error));
+  .then(() => console.log('Banco de dados sincronizado.'))
+  .catch(error => console.error('Erro ao sincronizar o banco de dados:', error));
 
 module.exports = {
-   User,
-   States,
-   Cities,
-   Addresses,
-   Employer,
-   Services,
-   Pets,
-   Products,
-   Categories,
-   Species,
-   Appointments,
-   Carts,
-   Cart_items,
-   Payments,
-   Orders,
-   Order_items,
-   sequelize
+  User,
+  States,
+  Cities,
+  Addresses,
+  Employer,
+  Services,
+  Pets,
+  Products,
+  Categories,
+  Species,
+  Appointments,
+  Carts,
+  Cart_items,
+  Payments,
+  Orders,
+  Order_items,
+  sequelize
 };
