@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Instale as dependências da aplicação
-RUN npm install
+RUN npm ci
 
 # Copie o restante do código da aplicação
 COPY . .
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Comando para rodar a aplicação
-CMD ["npm", "start"]
+CMD node src/server.js
