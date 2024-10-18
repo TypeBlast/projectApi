@@ -9,8 +9,6 @@ const configDatabase = require('./database/index');
 class AppController {
     constructor() {
         this.express = express();
-        this.middlewares();
-        this.router();
         this.corsOptions = {
             origin: [
                 'https://petexpress.vercel.app',
@@ -19,6 +17,8 @@ class AppController {
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             credentials: true,
         };
+        this.middlewares();
+        this.router();
     }
 
     middlewares() {
@@ -48,13 +48,6 @@ class AppController {
                 message: `HTTP request received. Response successfully rendered in ${duration}ms`
             });
         });
-        this.express.use((req, res, next) => {
-            res.on('finish', () => {
-                console.log('Response Headers:', res.getHeaders());
-            });
-            next();
-        });
-        
     }
 }
 
