@@ -11,9 +11,18 @@ class AppController {
         this.express = express();
         this.middlewares();
         this.router();
+        this.corsOptions = {
+            origin: [
+                'https://petexpress.vercel.app',
+                'https://petexpress-typeblast.vercel.app'
+            ],
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            credentials: true,
+        };
     }
 
     middlewares() {
+        this.express.use(cors(this.corsOptions)); 
         this.express.use(express.json());
         this.express.use((req, res, next) => {
             req.startTime = Date.now();
@@ -29,7 +38,7 @@ class AppController {
     }
 
     router() {
-        this.express.options('*', cors(corsOptions));
+        this.express.options('*', cors(this.corsOptions));
         this.express.use('/api', require('./appModule'));
         this.express.get("/health/", (req, res) => {
 
