@@ -19,9 +19,17 @@ class AppController {
             req.startTime = Date.now();
             next();
         });
+
+        this.express.use((req, res, next) => {
+            res.on('finish', () => {
+                console.log('Response Headers:', res.getHeaders());
+            });
+            next();
+        });
     }
 
     router() {
+        this.express.options('*', cors(corsOptions));
         this.express.use('/api', require('./appModule'));
         this.express.get("/health/", (req, res) => {
 

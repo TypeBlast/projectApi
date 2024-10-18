@@ -1,5 +1,5 @@
 require('dotenv').config();
-const cors = require('cors');  // Importando o cors
+const cors = require('cors');
 const app = require('./index');
 const PORT = process.env.PORT;
 
