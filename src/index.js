@@ -38,7 +38,6 @@ class AppController {
     }
 
     router() {
-        this.express.options('*', cors(this.corsOptions));
         this.express.use('/api', require('./appModule'));
         this.express.get("/health/", (req, res) => {
 
@@ -49,6 +48,13 @@ class AppController {
                 message: `HTTP request received. Response successfully rendered in ${duration}ms`
             });
         });
+        this.express.use((req, res, next) => {
+            res.on('finish', () => {
+                console.log('Response Headers:', res.getHeaders());
+            });
+            next();
+        });
+        
     }
 }
 
