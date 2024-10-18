@@ -14,7 +14,6 @@ class AppController {
     }
 
     middlewares() {
-        this.express.use(cors()); 
         this.express.use(express.json());
         this.express.use((req, res, next) => {
             req.startTime = Date.now();
