@@ -12,7 +12,8 @@ class AppController {
         this.corsOptions = {
             origin: [
                 'https://petexpress.vercel.app',
-                'https://petexpress-typeblast.vercel.app'
+                'https://petexpress-typeblast.vercel.app',
+                'http://localhost:5173' // URL de desenvolvimento local
             ],
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             credentials: true,
