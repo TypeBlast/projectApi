@@ -1,6 +1,7 @@
 const { ValidationError } = require('sequelize');
 const Addresses = require('./Entities/addresses.entity');
 const Cities = require('../city/Entities/cities.entity');
+const Orders = require('../orders/Entities/orders.entity')
 
 const createAddress = async (addressData, userId) => {
   try {
@@ -123,7 +124,7 @@ const updateAddress = async (addressId, addressData) => {
   }
 };
 
-const deleteAddress = async (addressId) => {
+const deleteAddress = async (addressId, userId) => {
   try {
     if (!addressId || isNaN(addressId)) {
       throw new Error('ID de endereço inválido.');
@@ -134,6 +135,15 @@ const deleteAddress = async (addressId) => {
       return { status: 404, message: 'Endereço não encontrado.' };
     }
 
+   
+    const orders = await Orders.findAll({
+      where: { address_id: addressId },
+    });
+
+    if (orders.length > 0) {
+      return { status: 400, message: 'Não é possível excluir este endereço porque ele está relacionado a um pedido.' };
+    }
+
     await address.destroy();
 
     return { status: 200, message: 'Endereço excluído com sucesso.' };
@@ -141,6 +151,7 @@ const deleteAddress = async (addressId) => {
     return { status: 400, message: e.message };
   }
 };
+
 
 const getAddressesByUserId = async (userId) => {
   try {

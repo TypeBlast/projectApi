@@ -23,10 +23,7 @@ const createAppointment = async (appointmentData, userId) => {
     }
 
     
-    const appointmentHour = appointmentDateTime.getHours();
-    if (appointmentHour < 8 || appointmentHour >= 18) {
-      throw new Error('O horário de agendamento deve estar entre 08:00 e 18:00.');
-    }
+    
 
     
     const existingAppointment = await Appointments.findOne({
@@ -130,6 +127,18 @@ const deleteAppointment = async (appointmentId) => {
       return { status: 404, message: 'Agendamento não encontrado.' };
     }
 
+    const currentDateTime = new Date();
+    const appointmentDateTime = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
+
+ 
+    const timeDifference = appointmentDateTime - currentDateTime;
+    const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+
+    if (hoursDifference >= 0 && hoursDifference < 1) {
+      throw new Error('Não é possível cancelar um agendamento com menos de 1 hora de antecedência.');
+    }
+
     await appointment.destroy();
 
     return { status: 200, message: 'Agendamento excluído com sucesso.' };
@@ -137,6 +146,7 @@ const deleteAppointment = async (appointmentId) => {
     return { status: 400, message: e.message };
   }
 };
+
 
 module.exports = {
   createAppointment,

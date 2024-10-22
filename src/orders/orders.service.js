@@ -15,7 +15,6 @@ class OrderService {
       throw new Error('ID do usuário é obrigatório');
     }
 
-   
     const order = await Orders.findOne({
       where: { payment_id: paymentId, user_id: userId }, 
       include: [
@@ -125,6 +124,19 @@ class OrderService {
   async cancelOrder(orderId, userId) {
     const order = await Orders.findOne({
       where: { id: orderId, user_id: userId },
+      include: [
+        {
+          model: OrderItems,
+          as: 'order_items',
+          include: [
+            {
+              model: Products,
+              as: 'products',
+              attributes: ['id', 'stock'],
+            },
+          ],
+        },
+      ],
     });
 
     if (!order) {
@@ -133,6 +145,16 @@ class OrderService {
 
     if (order.status === 'Entregue') {
       throw new Error('Pedido entregue não pode ser cancelado');
+    }
+
+    for (const item of order.order_items) {
+      const product = item.products;
+      const newStock = product.stock + item.quantity;
+
+      await Products.update(
+        { stock: newStock },
+        { where: { id: product.id } }
+      );
     }
 
     await Orders.update(
@@ -147,10 +169,9 @@ class OrderService {
 
     return {
       status: 200,
-      message: 'Pedido e pagamento cancelados com sucesso',
+      message: 'Pedido e pagamento cancelados com sucesso.',
     };
-}
-
+  }
 
   async markOrderAsDelivered(orderId, userId) {
     const order = await Orders.findOne({
@@ -175,7 +196,6 @@ class OrderService {
       message: 'Pedido entregue com sucesso',
     };
   }
-
 
   async getAllOrders(userId) {
     if (!userId) {

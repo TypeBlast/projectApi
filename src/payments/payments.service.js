@@ -39,24 +39,25 @@ class PaymentService {
     if (!userId || !cartId || !addressId) {
       throw new Error('Valores necessários para o pagamento não estão definidos');
     }
-
+  
     const validPaymentMethods = ['Cartão de Débito', 'Cartão de Crédito', 'Boleto', 'Pix'];
     if (!paymentMethod || !validPaymentMethods.includes(paymentMethod)) {
       throw new Error('Método de pagamento obrigatório e deve ser um dos seguintes: ' + validPaymentMethods.join(', '));
     }
-
+  
     const cart = await Carts.findOne({ where: { id: cartId, user_id: userId } });
     if (!cart) {
       throw new Error('Carrinho não encontrado');
     }
-
+  
     const address = await Addresses.findOne({ where: { id: addressId, user_id: userId } });
     if (!address) {
       throw new Error('Endereço não encontrado ou não pertence ao usuário');
     }
-
+  
     const totalValue = await this.calculateCartTotal(cartId);
-
+  
+    
     const payment = await Payments.create({
       cart_id: cartId,
       user_id: userId,
@@ -65,7 +66,8 @@ class PaymentService {
       status: 'Aprovado',
       payment_date: new Date(),
     });
-
+  
+    
     const order = await Orders.create({
       user_id: userId,
       payment_id: payment.id,
@@ -74,38 +76,43 @@ class PaymentService {
       status: 'Processando',
       order_date: new Date(),
     });
-
+  
     const cartItems = await CartItems.findAll({ where: { cart_id: cartId } });
     const orderItems = [];
-
+  
     for (const item of cartItems) {
       const product = await Products.findOne({ where: { id: item.product_id } });
-
+  
       if (!product || product.price == null) {
         throw new Error('Erro ao adicionar item ao pedido: Produto não encontrado ou preço é inválido');
       }
-
+  
+      
       const orderItem = await Order_items.create({
         order_id: order.id,
         product_id: item.product_id,
         quantity: item.quantity,
         price: parseFloat(product.price) || 0,
       });
-
+  
       orderItems.push(orderItem);
+  
+   
     }
-
+  
+    
     const finalTotalValue = await this.getOrderTotal(order.id);
-
+  
     await Payments.update({ total_value: finalTotalValue }, { where: { id: payment.id } });
     await Orders.update({ total_value: finalTotalValue }, { where: { id: order.id } });
-
+  
+    
     await CartItems.destroy({ where: { cart_id: cartId } });
-
+  
     const formatBrazilianDate = (date) => {
       return date ? new Date(date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : 'Data não disponível';
     };
-
+  
     return {
       status: 201,
       message: 'Pagamento e pedido processados com sucesso',
@@ -128,6 +135,7 @@ class PaymentService {
       }
     };
   }
+  
 
   async getCartSummary(userId, cartId) {
     const cart = await Carts.findOne({ where: { id: cartId, user_id: userId } });

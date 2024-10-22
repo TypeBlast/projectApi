@@ -1,5 +1,6 @@
 const { ValidationError } = require('sequelize');
 const Pets = require('./Entities/pets.entity');
+const Appointments = require('../appointments/Entities/appointments.entity')
 
 const createPet = async (petData, userId) => {
   try {
@@ -102,7 +103,7 @@ const updatePet = async (petId, petData) => {
 
     const { name, age, specie, size } = petData;
 
-    // Validação de idade
+    
     if (age && age > 50) {
       throw new Error('Idade não pode ser maior que 50 anos.');
     }
@@ -129,6 +130,15 @@ const deletePet = async (petId) => {
     const pet = await Pets.findByPk(petId);
     if (!pet) {
       return { status: 404, message: 'Pet não encontrado.' };
+    }
+
+    
+    const appointments = await Appointments.findAll({
+      where: { pet_id: petId },
+    });
+
+    if (appointments.length > 0) {
+      return { status: 400, message: 'Não é possível excluir este pet porque ele está relacionado a um agendamento.' };
     }
 
     await pet.destroy();

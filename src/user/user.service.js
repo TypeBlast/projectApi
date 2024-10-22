@@ -54,8 +54,8 @@ async function createUser(userData) {
         }
 
         if (userData.phone) {
-            if (!/^\d{13}$/.test(userData.phone)) {
-                throw new Error('O telefone deve conter exatamente 13 dígitos, incluindo o código postal do país e o seu DDD.');
+            if (!/^\d{11}$/.test(userData.phone)) {
+                throw new Error('O telefone deve conter exatamente 11 dígitos, incluindo o seu DDD.');
             }
         }
 
@@ -267,8 +267,8 @@ async function getUserByIdUsingRelations(userId) {
         }
 
         if (userData.phone) {
-            if (!/^\d{13}$/.test(userData.phone)) {
-                throw new Error('O telefone deve conter exatamente 13 dígitos.');
+            if (!/^\d{11}$/.test(userData.phone)) {
+                throw new Error('O telefone deve conter exatamente 11 dígitos, incluindo o seu DDD.');
             }
         }
 
