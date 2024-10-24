@@ -12,7 +12,7 @@ const {
 
 router.post('/', authenticate, createAppointmentController);
 router.get('/', authenticate, getUserAppointmentsController);
-router.get('/', authenticate, getAllAppointments);
+router.get('/all', getAllAppointments);
 router.get('/:id', authenticate, getAppointmentByIdAndUserIdController);
 router.put('/:id', authenticate, updateAppointmentController);
 router.delete('/:id', authenticate, deleteAppointmentController);
