@@ -3,6 +3,7 @@ const authenticate = require('../utils/middleware');
 const {
   createAppointmentController,
   getUserAppointmentsController,
+  getAllAppointments,
   getAppointmentByIdAndUserIdController,
   updateAppointmentController,
   deleteAppointmentController
@@ -11,6 +12,7 @@ const {
 
 router.post('/', authenticate, createAppointmentController);
 router.get('/', authenticate, getUserAppointmentsController);
+router.get('/', authenticate, getAllAppointments);
 router.get('/:id', authenticate, getAppointmentByIdAndUserIdController);
 router.put('/:id', authenticate, updateAppointmentController);
 router.delete('/:id', authenticate, deleteAppointmentController);

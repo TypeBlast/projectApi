@@ -51,6 +51,15 @@ const createAppointment = async (appointmentData, userId) => {
   }
 };
 
+const getAllAppointments = async () => {
+  try{
+    const appointments = await Appointments.findAll();
+    return {status: 200, data: appointments};
+  } catch(error){
+    return { status: 400, message: e.message }
+  }
+};
+
 const getUserAppointments = async (userId) => {
   try {
     const appointments = await Appointments.findAll({
@@ -151,6 +160,7 @@ const deleteAppointment = async (appointmentId) => {
 module.exports = {
   createAppointment,
   getUserAppointments,
+  getAllAppointments,
   getAppointmentByIdAndUserId,
   updateAppointment,
   deleteAppointment
