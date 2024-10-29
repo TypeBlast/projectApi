@@ -236,6 +236,7 @@ class OrderService {
       const totalValue = order.order_items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
       return {
+        id: order.id,
         orderDate: formatBrazilianDate(order.order_date),
         status: order.status,
         totalValue: totalValue,
