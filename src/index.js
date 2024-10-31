@@ -13,7 +13,7 @@ class AppController {
             origin: [
                 'https://petexpress.vercel.app',
                 'https://petexpress-typeblast.vercel.app',
-                'http://localhost:5173' // URL de desenvolvimento local
+                'http://localhost:5173' 
             ],
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             credentials: true,

@@ -6,6 +6,7 @@ const Pets = require('../pets/Entities/pets.entity')
 const Appointments = require('../appointments/Entities/appointments.entity')
 const Services = require('../services/Entities/services.entity')
 const Employers = require('../employers/Entities/employers.entity')
+const cartsService = require('../carts/carts.service')
 
 async function createUser(userData) {
     try {
@@ -61,6 +62,7 @@ async function createUser(userData) {
 
 
         const newUser = await User.create(userData);
+        await cartsService.addToCart(newUser.id, null, 0);
 
 
         const userJson = newUser.toJSON();
