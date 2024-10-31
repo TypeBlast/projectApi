@@ -16,7 +16,7 @@ class OrderService {
     }
 
     const order = await Orders.findOne({
-      where: { payment_id: paymentId, user_id: userId }, 
+      where: { payment_id: paymentId, user_id: userId },
       include: [
         {
           model: Payments,
@@ -321,6 +321,95 @@ class OrderService {
     });
 
     return orderDetails;
+  }
+
+  async deleteOrderByAdmin(orderId) {
+    const order = await Orders.findOne({
+        where: { id: orderId },
+        include: [{
+            model: Payments,
+            as: 'payments',
+        }],
+    });
+
+    if (!order) {
+        throw new Error('Pedido não encontrado');
+    }
+
+    
+    await OrderItems.destroy({
+        where: { order_id: orderId },
+    });
+
+
+    await Orders.destroy({
+        where: { id: orderId },
+    });
+
+   
+    if (order.payment_id) {
+        await Payments.destroy({
+            where: { id: order.payment_id },
+        });
+    }
+
+    return {
+        status: 200,
+        message: 'Pedido, itens e pagamento excluídos com sucesso',
+    };
+}
+
+
+  async cancelOrderByAdmin(orderId) {
+    const order = await Orders.findOne({
+      where: { id: orderId },
+      include: [
+        {
+          model: OrderItems,
+          as: 'order_items',
+          include: [
+            {
+              model: Products,
+              as: 'products',
+              attributes: ['id', 'stock'],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!order) {
+      throw new Error('Pedido não encontrado');
+    }
+
+    if (order.status === 'Entregue') {
+      throw new Error('Pedido entregue não pode ser cancelado');
+    }
+
+    for (const item of order.order_items) {
+      const product = item.products;
+      const newStock = product.stock + item.quantity;
+
+      await Products.update(
+        { stock: newStock },
+        { where: { id: product.id } }
+      );
+    }
+
+    await Orders.update(
+      { status: 'Cancelado' },
+      { where: { id: orderId } }
+    );
+
+    await Payments.update(
+      { status: 'Cancelado' },
+      { where: { id: order.payment_id } }
+    );
+
+    return {
+      status: 200,
+      message: 'Pedido e pagamento cancelados com sucesso.',
+    };
   }
 }
 

@@ -6,7 +6,6 @@ class OrderController {
     const userId = req.userId; 
 
     try {
-      
       const orderDetails = await OrderService.getOrderByPaymentId(paymentId, userId);
       return res.status(200).json({
         status: 200,
@@ -27,12 +26,11 @@ class OrderController {
       const userId = req.userId; 
 
       const result = await OrderService.deleteOrder(orderId, userId);
-
       return res.status(result.status).json({
         message: result.message,
       });
     } catch (error) {
-      console.error('Erro ao cancelar pedido:', error.message);
+      console.error('Erro ao deletar pedido:', error.message);
       return res.status(400).json({
         error: error.message,
       });
@@ -45,7 +43,6 @@ class OrderController {
       const userId = req.userId; 
 
       const result = await OrderService.cancelOrder(orderId, userId);
-
       res.status(result.status).json({ message: result.message });
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -89,6 +86,30 @@ class OrderController {
     }
   }
 
+  
+  async deleteOrderByAdmin(req, res) {
+    const { orderId } = req.params;
+
+    try {
+      const result = await OrderService.deleteOrderByAdmin(orderId);
+      return res.status(result.status).json({ message: result.message });
+    } catch (error) {
+      console.error('Erro ao deletar pedido como admin:', error.message);
+      return res.status(400).json({ error: error.message });
+    }
+  }
+
+  async cancelOrderByAdmin(req, res) {
+    const { orderId } = req.params;
+
+    try {
+      const result = await OrderService.cancelOrderByAdmin(orderId);
+      return res.status(result.status).json({ message: result.message });
+    } catch (error) {
+      console.error('Erro ao cancelar pedido como admin:', error.message);
+      return res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = new OrderController();
