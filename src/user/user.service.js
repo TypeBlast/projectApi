@@ -2,10 +2,16 @@ const User = require('./Entities/user.entity');
 const Addresses = require('../address/Entities/addresses.entity');
 const Cities = require('../city/Entities/cities.entity');
 const States = require('../state/Entities/states.entity');
-const Pets = require('../pets/Entities/pets.entity')
-const Appointments = require('../appointments/Entities/appointments.entity')
-const Services = require('../services/Entities/services.entity')
-const Employers = require('../employers/Entities/employers.entity')
+const Pets = require('../pets/Entities/pets.entity');
+const Appointments = require('../appointments/Entities/appointments.entity');
+const Services = require('../services/Entities/services.entity');
+const Employers = require('../employers/Entities/employers.entity');
+const Cart_items = require('../carts/Entities/cart_items.entity');
+const Carts = require('../carts/Entities/carts.entity');
+const Orders = require('../orders/Entities/orders.entity');
+const Order_items = require('../orders/Entities/order_items.entity');
+const Payments = require('../payments/Entities/payments.entity');
+
 const cartsService = require('../carts/carts.service')
 
 async function createUser(userData) {
@@ -131,30 +137,80 @@ async function deleteUserById(idUser) {
         if (!idUser || isNaN(idUser)) {
             throw new Error('Id de usuário inválido.');
         }
-        
+
 
         const user = await User.findByPk(idUser, {
-            include: [{ model: Addresses, as: 'addresses' }]
+            include: [
+                { model: Addresses, as: 'addresses' },
+                { model: Pets, as: 'pets' },
+                { model: Appointments, as: 'appointments' },
+                { model: Payments, as: 'payments' },
+                { model: Orders, as: 'orders' },
+                { model: Carts, as: 'carts', include: [{ model: Cart_items, as: 'cart_items' }] }
+            ]
         });
 
         if (!user) {
             throw new Error('Usuário não encontrado.');
         }
 
+     
+        if (user.role === 'admin') {
+            throw new Error('Usuários com o cargo de "admin" não podem ser excluídos.');
+        }
 
-        if (user.addresses.length > 0) {
+      
+        if (user.orders && user.orders.length > 0) {
+            for (let order of user.orders) {
+      
+                await Order_items.destroy({ where: { order_id: order.id } });
+            }
+     
+            await Orders.destroy({ where: { user_id: idUser } });
+        }
+
+   
+        if (user.payments && user.payments.length > 0) {
+            for (let payment of user.payments) {
+
+                await Payments.destroy({ where: { user_id: idUser } });
+            }
+        }
+
+     
+        if (user.carts && user.carts.length > 0) {
+            for (let cart of user.carts) {
+                if (cart.cart_items && cart.cart_items.length > 0) {
+                    await Cart_items.destroy({ where: { cart_id: cart.id } });
+                }
+            }
+         
+            await Carts.destroy({ where: { user_id: idUser } });
+        }
+
+
+        if (user.appointments && user.appointments.length > 0) {
+            await Appointments.destroy({ where: { user_id: idUser } });
+        }
+
+     
+        if (user.pets && user.pets.length > 0) {
+            await Pets.destroy({ where: { user_id: idUser } });
+        }
+
+     
+        if (user.addresses && user.addresses.length > 0) {
             await Addresses.destroy({ where: { user_id: idUser } });
         }
 
 
         await user.destroy();
-        
-        return { status: 200, message: "Usuário excluído com sucesso" };
 
+        return { status: 200, message: "Usuário e dados relacionados excluídos com sucesso." };
     } catch (e) {
         return { status: 400, message: e.message };
     }
-};
+}
 
 
 async function getUserByIdUsingRelations(userId) {
