@@ -10,10 +10,9 @@ class AppController {
     constructor() {
         this.express = express();
         this.corsOptions = {
-            origin: [
-                'https://petexpress.vercel.app',               // Domínio principal
-                'https://petexpress-typeblast.vercel.app',     // Domínio que você forneceu
-                'http://localhost:5173'                         // Local para desenvolvimento
+            origin: [              
+                'https://petexpress-typeblast.vercel.app',     
+                'http://localhost:5173'                         
             ],
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             credentials: true,
@@ -25,15 +24,6 @@ class AppController {
     middlewares() {
         this.express.use(cors(this.corsOptions)); 
         this.express.use(express.json());
-
-       
-        this.express.use((req, res, next) => {
-            res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');  
-            res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');  
-            res.setHeader('Permissions-Policy', 'window-placement=(self)'); 
-            req.startTime = Date.now();
-            next();
-        });
     }
 
     router() {
